@@ -1,0 +1,24 @@
+.new-group-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  background: transparent;
+}
+.new-group {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+}
+.new-group label input {
+  border-radius: 20px;
+  height: 30px;
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+  border: 1px solid black;
+}

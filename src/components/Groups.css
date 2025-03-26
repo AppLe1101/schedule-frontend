@@ -1,0 +1,149 @@
+.groups-container {
+  background: white !important;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /*box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);*/
+}
+.groups-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+.group-item {
+  background: white;
+  padding: 10px;
+  border-radius: 20px;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  height: auto;
+  min-height: 50px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.5s ease;
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
+}
+table {
+  border-collapse: separate; /* обязательно */
+  border-spacing: 13px; /* задаёт отступы между ячейками (как по горизонтали, так и по вертикали) */
+}
+.group-details {
+  width: 100%;
+}
+.group-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.day-schedule {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+}
+.group-editor {
+  width: 100%;
+}
+.group-editor-item {
+  border: 1px solid #aaa;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.delete-lesson-btn {
+  margin: 0;
+  padding: 5px;
+  border-radius: 15px;
+  background: #ff3c38;
+}
+.delete-lesson-btn img {
+  margin: 0;
+  padding: 3px 3px 0 3px;
+}
+input[type="text"],
+input[type="password"] {
+  padding: 5px;
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid #aaa;
+  width: 90%;
+  height: 30px;
+}
+input[type="text"]:focus {
+  outline: 3px solid #61a4fb;
+  outline-offset: 2px;
+}
+.group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.delete-group-btn {
+  background-color: #ff3c38;
+  position: relative;
+
+  border: none;
+  cursor: pointer;
+}
+@media screen and (max-width: 590px) {
+  .schedule-table {
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 475px) {
+  .schedule-table {
+    font-size: 12px;
+  }
+}
+@media screen and (max-width: 430px) {
+  .schedule-table {
+    font-size: 10px;
+  }
+  .groups-container {
+    padding-top: 0;
+    margin-top: 0;
+  }
+}
+@media screen and (max-width: 375px) {
+  .schedule-table {
+    font-size: 9px;
+  }
+  .groups-container {
+    padding-top: 0;
+    margin-top: 0;
+  }
+}
+@media screen and (max-width: 325px) {
+  .schedule-table {
+    font-size: 7px;
+  }
+  .group-header {
+    font-size: 16px;
+  }
+  .group-detail h3 {
+    font-size: 14px;
+    margin: 0;
+  }
+  .day-schedule h4 {
+    font-size: 12px;
+    margin: 3px 0 3px 0;
+  }
+  .groups-list h2 {
+    font-size: 18px;
+    margin: 1px;
+  }
+  .groups-container {
+    padding-top: 0;
+    margin-top: 0;
+  }
+}

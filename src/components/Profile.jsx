@@ -44,36 +44,6 @@ const Profile = ({ user, token, apiUrl }) => {
       <p>
         <strong>Роль:</strong> {user.role}
       </p>
-
-      {user.role === "teacher" && (
-        <>
-          <h3>Ваша группа</h3>
-          {loading ? (
-            <p>Загрузка...</p>
-          ) : group ? (
-            <>
-              <p>
-                <strong>Название:</strong> {group.name}
-              </p>
-              <h4>Ученики:</h4>
-              <ul>
-                {students.length > 0 ? (
-                  students.map((student) => (
-                    <li key={student._id}>
-                      {student.username} —{" "}
-                      <Link to={`/grades/${student._id}`}>Открыть дневник</Link>
-                    </li>
-                  ))
-                ) : (
-                  <p>Ученики не найдены</p>
-                )}
-              </ul>
-            </>
-          ) : (
-            <p>Группа не найдена</p>
-          )}
-        </>
-      )}
     </div>
   );
 };

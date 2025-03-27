@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Await, useParams } from "react-router-dom";
 
-const GradesByStudent = ({ token, user, apiUrl }) => {
-  const { studentId } = useParams();
+const GradesByStudent = ({ studentId: propStudentId, token, user, apiUrl }) => {
+  const params = useParams();
+  const studentId =
+    propStudentId ||
+    params.studentId ||
+    (user?.role === "student" ? user._id : null);
   const [grades, setGrades] = useState([]);
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,6 +19,9 @@ const GradesByStudent = ({ token, user, apiUrl }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!studentId) {
+        return <p>Ошибка: не удалось определить ID ученика.</p>;
+      }
       try {
         const [gradesRes, studentRes] = await Promise.all([
           axios.get(`${apiUrl}/api/grades/${studentId}`, {
@@ -62,8 +69,6 @@ const GradesByStudent = ({ token, user, apiUrl }) => {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>Дневник: {student?.username || "Загрузка..."}</h2>
-
       {loading ? (
         <p>Загрузка...</p>
       ) : grades.length === 0 ? (
@@ -93,7 +98,7 @@ const GradesByStudent = ({ token, user, apiUrl }) => {
         </table>
       )}
 
-      {(user.role === "teacher" || user.role === "director") && (
+      {user && (user.role === "teacher" || user.role === "director") && (
         <div style={{ marginTop: "20px" }}>
           <h3>Добавить оценку</h3>
           <input

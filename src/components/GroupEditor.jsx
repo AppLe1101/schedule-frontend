@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import binIcon from "./icons/delete.svg";
+import "./GroupEditor.css";
 
 function GroupEditor({ group, token, apiUrl, onEditorClose }) {
   const [localGroup, setLocalGroup] = useState(group);
@@ -169,7 +170,14 @@ function GroupEditor({ group, token, apiUrl, onEditorClose }) {
         </div>
       ))}
       <button onClick={addDay}>Добавить день</button>
-      <div style={{ marginTop: "20px" }}>
+      <div
+        style={{
+          marginTop: "20px",
+          gap: "10px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <button onClick={handleSave} style={{ backgroundColor: "#16db65" }}>
           Сохранить изменения
         </button>

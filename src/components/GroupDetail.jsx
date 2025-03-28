@@ -15,8 +15,6 @@ function GroupDetail({ group, token, user, apiUrl }) {
     setEditing(true);
   };
 
-  // Callback, который вызывается из редактора после сохранения или отмены
-  // updatedGroup – обновлённый объект группы (при сохранении) или исходный (при отмене)
   const handleEditorClose = (updatedGroup) => {
     setLocalGroup(updatedGroup);
     setEditing(false);

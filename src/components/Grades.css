@@ -1,0 +1,112 @@
+.grades-container {
+  padding: 20px;
+  margin: 20px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgb(129 129 129 / 37%);
+  min-height: 88vh;
+}
+
+.group-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px 20px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  transition: background 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.group-item {
+  display: flex;
+  align-items: center;
+}
+
+.group-card:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.group-members {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 16px;
+}
+
+.member-column {
+  flex: 1;
+  min-width: 240px;
+}
+
+.member-column h4 {
+  margin-bottom: 8px;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.member-item span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+.member-item span:hover {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  z-index: 1;
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.member-item button {
+  background: rgba(255, 0, 0, 0.2);
+  border: none;
+  border-radius: 20px;
+  padding: 9px;
+  cursor: pointer;
+  color: white;
+  transition: background 0.3s ease;
+}
+
+.member-item button:hover {
+  background: rgba(255, 0, 0, 0.4);
+}
+
+select,
+button {
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+select:focus,
+button:focus {
+  outline: none;
+}
+
+.warning-text {
+  color: #ff6b6b;
+  font-size: 0.9em;
+  margin-top: 6px;
+}

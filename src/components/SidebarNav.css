@@ -1,44 +1,51 @@
 .sidebar-nav {
   position: fixed;
-  right: 0;
-  top: 0;
-  height: 40%;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 80px;
-  background-color: #f4f4f4;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  padding: 12px 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-  gap: 10px;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  border-radius: 30px;
+  align-items: center;
+  gap: 16px;
   z-index: 999;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: all 0.2s linear;
+}
 
-  transform: translateY(65%) translateX(-10px);
+.sidebar-nav.expanded {
+  width: 300px;
+  transition: all 0.2s linear;
 }
 
 .sidebar-nav__item {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 12px;
-  text-align: center;
-  text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  transition: background-color 0.2s ease;
+  transition: all 0.25s ease;
   cursor: pointer;
 }
 
 .sidebar-nav__item:hover {
-  background-color: #ddd;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .sidebar-nav__item.active {
-  background-color: #ccc;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.7);
 }
 
 .sidebar-icon {
-  display: flex;
   width: 24px;
   height: 24px;
 }
@@ -46,5 +53,47 @@
 .sidebar-icon svg {
   width: 100%;
   height: 100%;
-  fill: #333;
+}
+
+/* Logout button */
+.sidebar-nav .logout-btn {
+  background: rgba(255, 0, 0, 0.15);
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  margin: auto;
+  transition: background 0.2s ease;
+}
+
+.sidebar-nav .logout-btn:hover {
+  background: rgba(255, 0, 0, 0.3);
+}
+
+.confirm-logout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.confirm-logout p {
+  margin: 20px 10px 10px 10px;
+  text-align: center;
+}
+
+.cancel-logout {
+  background: none;
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  padding: 0;
+}
+.cancel-logout:hover {
+  transform: scale(1) !important;
+  background: none !important;
+  color: red;
+}
+
+.confirm-logout-btn {
+  position: relative !important;
+  margin: 0px 10px 0px 10px;
 }

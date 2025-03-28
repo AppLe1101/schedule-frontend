@@ -40,7 +40,7 @@ function Groups({ token, user }) {
   };
 
   const handleDeleteGroup = (groupId) => {
-    if (window.confirm("Are you sure you want to delete this group")) {
+    if (window.confirm("Вы уверенны что хотите удалить группу?")) {
       axios
         .delete(
           `https://mk1-schedule-backend-ff28aedc0b67.herokuapp.com/api/groups/${groupId}`,

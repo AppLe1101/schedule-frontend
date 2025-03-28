@@ -38,7 +38,7 @@ function App() {
   return (
     <Router basename="/schedule-frontend">
       {token && <SidebarNav onLogout={handleLogout} />}
-      <div className="App" style={{ marginRight: token ? "180px" : "0" }}>
+      <div className="App" style={{ marginRight: token ? "120px" : "0" }}>
         <header className="App-header"></header>
 
         <main>

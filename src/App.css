@@ -1,5 +1,18 @@
+body {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgb(206, 206, 206);
+  overflow-x: hidden;
+}
+#root {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .App {
   text-align: center;
+  width: 100%;
 }
 .App-header {
   display: flex;
@@ -18,12 +31,15 @@ h1 {
   padding: 0;
 }
 button {
-  margin: 10px;
-  padding: 10px 15px;
-  font-size: 16px;
-  background-color: #61a4fb;
-  color: white;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.445);
   border: none;
-  border-radius: 10px;
+  padding: 9px 16px;
+  border-radius: 15px;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+button:hover {
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(1.05);
 }

@@ -1,0 +1,64 @@
+.dairy-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dairy-table {
+  width: 70%;
+  border-collapse: separate;
+}
+
+.dairy-container td {
+  border-radius: 10px;
+  height: 30px;
+  transition: all 0.2s ease-in-out;
+}
+
+.dairy-container .editable-field:hover {
+  scale: 1.1;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.25);
+}
+
+.table-item {
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  background: none;
+  border: none;
+  outline: none;
+  text-align: center;
+}
+
+.add-grade-container {
+  margin-top: 20px;
+}
+
+.add-grade-field {
+  padding: 6px 10px;
+  margin: 5px;
+  width: 98%;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #000;
+  font-size: 14px;
+  outline: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.add-grade-field:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.add-grade-field:focus {
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.25);
+  outline: none !important;
+}

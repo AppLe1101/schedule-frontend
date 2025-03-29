@@ -42,8 +42,16 @@ const Profile = ({ user, token, apiUrl }) => {
         <strong>Имя:</strong> {user.username}
       </p>
       <p>
-        <strong>Роль:</strong> {user.role}
+        <strong>ID:</strong> {user._id}
       </p>
+      <p>
+        <strong>Статус:</strong> {user.role}
+      </p>
+      {user.role === "student" && (
+        <p>
+          <strong>Группа:</strong> {user.groupId}
+        </p>
+      )}
     </div>
   );
 };

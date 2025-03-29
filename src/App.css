@@ -43,3 +43,14 @@ button:hover {
   background: rgba(255, 255, 255, 0.6);
   transform: scale(1.05);
 }
+
+@media screen and (max-width: 768px) {
+  .App {
+    font-size: calc(10px + 2vmin);
+    margin-top: 120px;
+    margin-right: 0px !important;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+}

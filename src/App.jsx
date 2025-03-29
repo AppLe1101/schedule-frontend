@@ -11,6 +11,7 @@ import Grades from "./components/Grades";
 import Profile from "./components/Profile";
 import SidebarNav from "./components/SidebarNav";
 import GradesByStudent from "./components/GradesByStudent";
+import MainPage from "./components/MainPage";
 import "./App.css";
 
 //const apiUrl = process.env.REACT_APP_API_URL;
@@ -37,7 +38,14 @@ function App() {
 
   return (
     <Router basename="/schedule-frontend">
-      {token && <SidebarNav onLogout={handleLogout} />}
+      {token && (
+        <SidebarNav
+          onLogout={handleLogout}
+          token={token}
+          user={user}
+          apiUrl={apiUrl}
+        />
+      )}
       <div className="App" style={{ marginRight: token ? "120px" : "0" }}>
         <header className="App-header"></header>
 
@@ -86,6 +94,17 @@ function App() {
               element={
                 token ? (
                   <Profile token={token} user={user} apiUrl={apiUrl} />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            <Route
+              path="/news"
+              element={
+                token ? (
+                  <MainPage token={token} user={user} apiUrl={apiUrl} />
                 ) : (
                   <Navigate to="/login" />
                 )

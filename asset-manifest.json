@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/schedule-frontend/static/css/main.6bdd769a.css",
+    "main.js": "/schedule-frontend/static/js/main.e4c13314.js",
+    "static/js/488.4e794dae.chunk.js": "/schedule-frontend/static/js/488.4e794dae.chunk.js",
+    "static/media/homework.svg": "/schedule-frontend/static/media/homework.7f6a6e3944a06b252c9bbbdfd40ac54f.svg",
+    "static/media/mainpage.svg": "/schedule-frontend/static/media/mainpage.a3e5370fede402fb2d74a17d7a94a4b2.svg",
+    "static/media/schedule.svg": "/schedule-frontend/static/media/schedule.82e22a122520c462b1940531e9cd33a1.svg",
+    "static/media/bell.svg": "/schedule-frontend/static/media/bell.11af912c46a5af741aa6b2e44313aa0c.svg",
+    "index.html": "/schedule-frontend/index.html",
+    "static/media/profile.svg": "/schedule-frontend/static/media/profile.edbf35609e22182644ba2683e6399732.svg",
+    "static/media/delete.svg": "/schedule-frontend/static/media/delete.85be139089fe2b2c49cd8b45a208d944.svg",
+    "static/media/diary.svg": "/schedule-frontend/static/media/diary.19f886171225085818830a73a7cafd35.svg",
+    "main.6bdd769a.css.map": "/schedule-frontend/static/css/main.6bdd769a.css.map",
+    "main.e4c13314.js.map": "/schedule-frontend/static/js/main.e4c13314.js.map",
+    "488.4e794dae.chunk.js.map": "/schedule-frontend/static/js/488.4e794dae.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6bdd769a.css",
+    "static/js/main.e4c13314.js"
+  ]
+}

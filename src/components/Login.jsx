@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./Login.css";
+import "./styles/Login.css";
 
-function Login({ onLogin }) {
+function Login({ onLogin, apiUrl }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -11,13 +11,10 @@ function Login({ onLogin }) {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "https://mk1-schedule-backend-ff28aedc0b67.herokuapp.com/api/login",
-        {
-          username,
-          password,
-        }
-      );
+      const res = await axios.post(`${apiUrl}/api/login`, {
+        username,
+        password,
+      });
       const token = res.data.token;
 
       const payloadBase64 = token.split(".")[1];
@@ -25,8 +22,8 @@ function Login({ onLogin }) {
 
       const user = res.data.user;
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("user", JSON.stringify(user));
       onLogin(token, user);
     } catch (err) {
       console.error(err);

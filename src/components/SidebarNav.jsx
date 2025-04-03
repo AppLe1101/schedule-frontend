@@ -6,7 +6,8 @@ import { ReactComponent as ScheduleIcon } from "./icons/schedule.svg";
 import { ReactComponent as DiaryIcon } from "./icons/diary.svg";
 import { ReactComponent as MainPageIcon } from "./icons/mainpage.svg";
 import { ReactComponent as BellIcon } from "./icons/bell.svg";
-import "./SidebarNav.css";
+import { ReactComponent as HomeworkIcon } from "./icons/homework.svg";
+import "./styles/SidebarNav.css";
 
 const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
   const location = useLocation();
@@ -18,8 +19,8 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-        const token = localStorage.getItem("token");
+        const storedUser = JSON.parse(sessionStorage.getItem("user"));
+        const token = sessionStorage.getItem("token");
         const response = await fetch(`${apiUrl}/api/news`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -37,8 +38,13 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
   }, [location]);
 
   const navItems = [
-    { path: "/profile", label: "Профиль", icon: <ProfileIcon /> },
+    { path: `/profile/${user._id}`, label: "Профиль", icon: <ProfileIcon /> },
     { path: "/news", label: "главная", icon: <MainPageIcon /> },
+    {
+      path: "/homework",
+      label: "ДЗ",
+      icon: <HomeworkIcon />,
+    },
     { path: "/groups", label: "Расписание", icon: <ScheduleIcon /> },
     { path: "/grades", label: "Журнал", icon: <DiaryIcon /> },
   ];

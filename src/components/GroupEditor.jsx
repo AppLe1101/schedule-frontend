@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import binIcon from "./icons/delete.svg";
-import "./GroupEditor.css";
+import "./styles/GroupEditor.css";
 
 function GroupEditor({ group, token, apiUrl, onEditorClose }) {
   const [localGroup, setLocalGroup] = useState(group);
@@ -70,7 +70,7 @@ function GroupEditor({ group, token, apiUrl, onEditorClose }) {
   const handleSave = async () => {
     try {
       const res = await axios.put(
-        `https://schedule-backend-production-ef03.up.railway.app/api/groups/${localGroup._id}/schedule`,
+        `${apiUrl}/api/groups/${localGroup._id}/schedule`,
         { schedule: localGroup.schedule },
         { headers: { Authorization: `Bearer ${token}` } }
       );

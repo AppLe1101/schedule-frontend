@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import "./AddGroupPanel.css";
+import "./styles/AddGroupPanel.css";
 import axios from "axios";
 
-function AddGroupPanel({ token, user, onGroupAdded }) {
+function AddGroupPanel({ token, user, onGroupAdded, apiUrl }) {
   const [showNewGroup, setShowNewGroup] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [schedule, setSchedule] = useState([]);
@@ -60,13 +60,9 @@ function AddGroupPanel({ token, user, onGroupAdded }) {
     };
 
     axios
-      .post(
-        "https://schedule-backend-production-ef03.up.railway.app/api/groups",
-        newGroup,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+      .post(`${apiUrl}/api/groups`, newGroup, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         alert("Группа успешно добавлена");
         if (onGroupAdded) onGroupAdded(res.data);

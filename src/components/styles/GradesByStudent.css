@@ -57,8 +57,43 @@
 }
 .add-grade-field:focus {
   z-index: 1;
-  background: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(0.25turn, #ffffff2f, #fff9f9, #ffffff2f);
+  background-size: 250%;
   backdrop-filter: blur(20px) saturate(180%);
   box-shadow: 0 0px 12px rgba(0, 0, 0, 0.25);
   outline: none !important;
+}
+
+.user-profile-link {
+  border-radius: 5px;
+  background-size: 250% !important;
+  transition: box-shadow 0.2s ease-in-out, backdrop-filter 0.2s ease-in-out,
+    transform 0.2s ease-in-out, padding 0.2s ease-in-out,
+    background 0.2s ease-in-out, border-radius 0.2s ease-in-out,
+    background-position 0.3s ease-in-out;
+}
+
+.user-profile-link:hover {
+  transform: scale(1.2);
+  z-index: 10;
+  border-radius: 15px;
+  padding: 8px 10px;
+  background-position: -20% 50%;
+  background: linear-gradient(0.25turn, #ffffff2f, #fff9f9, #ffffff2f);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: userHoverAnim 3s infinite ease;
+}
+
+@keyframes userHoverAnim {
+  0% {
+    background-position: -20% 50%;
+  }
+  50% {
+    background-position: 120% 50%;
+  }
+  100% {
+    background-position: -20% 50%;
+  }
 }

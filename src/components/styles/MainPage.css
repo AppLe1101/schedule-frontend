@@ -20,7 +20,7 @@
 
 .news-content {
   white-space: pre-wrap;
-  word-break: break-all;
+  word-break: break-word;
   max-width: 100%;
   margin-top: 10px;
 }
@@ -74,6 +74,7 @@
   backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.6s ease;
 }
 .news-item h3 {
   margin: 0 0 8px;
@@ -101,6 +102,17 @@
 }
 .news-item button:hover {
   background-color: rgba(255, 59, 48, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /****************************************************************/
@@ -176,4 +188,12 @@
   color: #ccc;
   margin-top: 8px;
   text-align: right;
+}
+
+.news-divider {
+  height: 2px;
+  width: 300px;
+  border: none;
+  border-radius: 10px;
+  background-color: #555;
 }

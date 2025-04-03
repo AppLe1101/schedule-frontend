@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import "./GradesByStudent.css";
+import "./styles/GradesByStudent.css";
 
 const GradesByStudent = ({ studentId, token, apiUrl, user }) => {
   const [grades, setGrades] = useState([]);
@@ -119,7 +120,16 @@ const GradesByStudent = ({ studentId, token, apiUrl, user }) => {
 
   return (
     <div ref={containerRef} className="dairy-container">
-      <h2>Оценки ученика {student?.username}</h2>
+      <h2>
+        Оценки ученика{" "}
+        <Link
+          className="user-profile-link"
+          to={`/profile/${student._id}`}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <span>{student?.username}</span>
+        </Link>
+      </h2>
       <table className="dairy-table">
         <thead>
           <tr>
@@ -203,7 +213,7 @@ const GradesByStudent = ({ studentId, token, apiUrl, user }) => {
           />
           <input
             type="text"
-            placeholder="Комментарий (необязательно)"
+            placeholder="Комментарий к оценке (необязательно)"
             value={newGrade.comment}
             onChange={(e) =>
               setNewGrade({ ...newGrade, comment: e.target.value })

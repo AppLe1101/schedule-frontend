@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import GradesByStudent from "./GradesByStudent";
-import "./Grades.css";
+import "./styles/Grades.css";
 
 const Grades = ({ user, token, apiUrl }) => {
   const [groups, setGroups] = useState([]);
@@ -240,7 +241,13 @@ const Grades = ({ user, token, apiUrl }) => {
                     <h4>Преподаватели</h4>
                     {members.teachers.map((teacher) => (
                       <div key={teacher._id} className="member-item">
-                        <span>👨‍🏫 {teacher.username}</span>
+                        <Link
+                          style={{ textDecoration: "none", color: "black" }}
+                          key={teacher._id}
+                          to={`/profile/${teacher._id}`}
+                        >
+                          <span>👨‍🏫 {teacher.username}</span>
+                        </Link>
                         <button
                           onClick={() =>
                             removeUserFromGroup(
@@ -290,6 +297,14 @@ const Grades = ({ user, token, apiUrl }) => {
 
             {selectedStudent && selectedGroup === group._id && (
               <div style={{ marginTop: "20px" }}>
+                <button
+                  onClick={() => {
+                    setSelectedStudent(null);
+                  }}
+                  className="close-grades-btn"
+                >
+                  Скрыть дневник
+                </button>
                 <GradesByStudent
                   studentId={selectedStudent._id}
                   token={token}

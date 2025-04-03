@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Route,
   Routes,
   Navigate,
@@ -12,19 +12,42 @@ import Profile from "./components/Profile";
 import SidebarNav from "./components/SidebarNav";
 import GradesByStudent from "./components/GradesByStudent";
 import MainPage from "./components/MainPage";
+import HomeworkPage from "./components/HomeworkPage";
+import "./components/utils/axiosSetup";
 import "./App.css";
 
 //const apiUrl = process.env.REACT_APP_API_URL;
 const apiUrl = "https://mk1-schedule-backend-ff28aedc0b67.herokuapp.com";
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [token, setToken] = useState(sessionStorage.getItem("token") || "");
   const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("user")) || null
+    JSON.parse(sessionStorage.getItem("user")) || null
   );
+
+  useEffect(() => {
+    const userData = JSON.parse(sessionStorage.getItem("user"));
+    const token = sessionStorage.getItem("token");
+
+    if (userData && token) {
+      try {
+        const decoded = JSON.parse(atob(token.split(".")[1]));
+        if (decoded.exp * 1000 < Date.now()) {
+          handleLogout();
+          window.location.href = "/login";
+          throw new Error("Token expired");
+        }
+      } catch (e) {
+        handleLogout();
+        window.location.href = "/login";
+        throw new Error("Invalid token");
+      }
+    }
+  }, []);
+
   const handleLogin = (token, userData) => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(userData));
+    sessionStorage.setItem("token", token);
+    sessionStorage.setItem("user", JSON.stringify(userData));
     setToken(token);
     setUser(userData);
   };
@@ -32,12 +55,12 @@ function App() {
   const handleLogout = () => {
     setToken("");
     setUser(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
   };
 
   return (
-    <Router basename="/schedule-frontend">
+    <Router>
       {token && (
         <SidebarNav
           onLogout={handleLogout}
@@ -46,6 +69,7 @@ function App() {
           apiUrl={apiUrl}
         />
       )}
+
       <div className="App" style={{ marginRight: token ? "120px" : "0" }}>
         <header className="App-header"></header>
 
@@ -59,10 +83,10 @@ function App() {
             <Route
               path="/login"
               element={
-                token ? (
+                token && user ? (
                   <Navigate to="/groups" />
                 ) : (
-                  <Login onLogin={handleLogin} />
+                  <Login onLogin={handleLogin} apiUrl={apiUrl} />
                 )
               }
             />
@@ -79,6 +103,11 @@ function App() {
             />
 
             <Route
+              path="/groups/:groupId"
+              element={<Groups token={token} user={user} />}
+            />
+
+            <Route
               path="/grades"
               element={
                 token ? (
@@ -90,7 +119,7 @@ function App() {
             />
 
             <Route
-              path="/profile"
+              path="/profile/:id"
               element={
                 token ? (
                   <Profile token={token} user={user} apiUrl={apiUrl} />
@@ -116,6 +145,17 @@ function App() {
               element={
                 token ? (
                   <GradesByStudent token={token} user={user} apiUrl={apiUrl} />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            <Route
+              path="/homework"
+              element={
+                token ? (
+                  <HomeworkPage token={token} user={user} apiUrl={apiUrl} />
                 ) : (
                   <Navigate to="/login" />
                 )

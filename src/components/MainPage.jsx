@@ -1,13 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import "./MainPage.css";
+import SearchBar from "./SearchBar";
+import Loading from "./Loading";
+import "./styles/MainPage.css";
 
 const MainPage = ({ user, token, apiUrl }) => {
+  const [searchParams] = useSearchParams();
+  const highlightId = searchParams.get("highlight");
+  const highlightRef = useRef(null);
   const [news, setNews] = useState([]);
   const [postNews, setPostNews] = useState({ title: "", content: "" });
   const [editingItem, setEditingItem] = useState(null);
   const [newNews, setNewNews] = useState([]);
   const [marked, setMarked] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [editForm, setEditForm] = useState({
     title: "",
     content: "",
@@ -17,12 +24,18 @@ const MainPage = ({ user, token, apiUrl }) => {
   const isAuthorized =
     user && (user.role === "director" || user.role === "editor");
 
-  //  useEffect(() => {
-  //    axios
-  //      .get(`${apiUrl}/api/news`)
-  //      .then((res) => setNews(res.data))
-  //      .catch((err) => console.error("Ошибка при загрузке новостей", err));
-  //  }, [apiUrl]);
+  useEffect(() => {
+    if (highlightRef.current) {
+      highlightRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      const timer = setTimeout(() => {
+        highlightRef.current?.classList.remove("highlighted");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [highlightId]);
 
   useEffect(() => {
     fetchNews();
@@ -56,12 +69,14 @@ const MainPage = ({ user, token, apiUrl }) => {
           ...user,
           readNews: [...(user.readNews || []), ...unreadNewsIds],
         };
-        localStorage.setItem("user", JSON.stringify(updatedUser));
+        sessionStorage.setItem("user", JSON.stringify(updatedUser));
         //setUser(updatedUser);
         setMarked(true);
       }
     } catch (err) {
       console.error("Ошибка при загрузке новостей:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,10 +135,10 @@ const MainPage = ({ user, token, apiUrl }) => {
   };
 
   // RETURN
-
   return (
     <div className="news-page glass-card">
       <h2 className="news-title">Новости</h2>
+      <SearchBar token={token} apiUrl={apiUrl} user={user} />
       {/* Запостить новое сообщение */}
       {isAuthorized && (
         <div className="news-form">
@@ -145,8 +160,8 @@ const MainPage = ({ user, token, apiUrl }) => {
           <button onClick={handlePublish}>Опубликовать</button>
         </div>
       )}
-
       {/* Список новостей */}
+      {loading && <Loading className="profile-loading" />}
       {news.length > 0 ? (
         <div className="news-list">
           {news.map((item, index) => {
@@ -158,7 +173,12 @@ const MainPage = ({ user, token, apiUrl }) => {
             return (
               <React.Fragment key={item._id}>
                 {showDivider && <hr className="news-divider" />}
-                <div className="news-item">
+                <div
+                  ref={item._id === highlightId ? highlightRef : null}
+                  className={`news-item ${
+                    item._id === highlightId ? "highlighted" : ""
+                  }`}
+                >
                   {editingItem?._id === item._id ? (
                     <div className="edit-form">
                       <input
@@ -219,9 +239,7 @@ const MainPage = ({ user, token, apiUrl }) => {
             );
           })}
         </div>
-      ) : (
-        <p>Новостей нет</p>
-      )}
+      ) : null}
     </div>
   );
 };

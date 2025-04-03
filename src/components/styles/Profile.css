@@ -1,0 +1,69 @@
+.user-profile {
+  margin-top: 52px;
+  padding: 30px;
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.profile-card {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 20px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(25px) saturate(180%);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  color: rgb(0, 0, 0);
+}
+
+.profile-avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(25px) saturate(180%);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50px;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+}
+
+.profile-info h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.self-label {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.4);
+}

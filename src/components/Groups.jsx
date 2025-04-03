@@ -4,25 +4,26 @@ import axios from "axios";
 import GroupDetail from "./GroupDetail";
 import AddGroupPanel from "./AddGroupPanel";
 import { CSSTransition } from "react-transition-group";
-import "./Groups.css";
+import { useParams } from "react-router-dom";
+import Loading from "./Loading";
+import "./styles/Groups.css";
 
-function Groups({ token, user }) {
+function Groups({ token, user, apiUrl }) {
   const [groups, setGroups] = useState([]);
   const [editing, setEditing] = useState(false);
   const [expandedGroupId, setExpandedGroupId] = useState(null);
   const [showAddGroup, setShowAddGroup] = useState(false);
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const { groupId: highlightGroupId } = useParams();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
-      .get(
-        "https://mk1-schedule-backend-ff28aedc0b67.herokuapp.com/api/groups",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+      .get(`${apiUrl}/api/groups`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => setGroups(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
   }, []);
 
   const toggleGroup = (groupId) => {
@@ -34,6 +35,22 @@ function Groups({ token, user }) {
     }
   };
 
+  useEffect(() => {
+    if (highlightGroupId) {
+      setExpandedGroupId(highlightGroupId);
+      setTimeout(() => {
+        const el = document.getElementById(`group-${highlightGroupId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          el.classList.add("highlighted");
+          setTimeout(() => {
+            el.classList.remove("highlighted");
+          }, 3000);
+        }
+      }, 300);
+    }
+  }, [highlightGroupId]);
+
   const handleGroupAdded = (newGroup) => {
     setGroups([...groups, newGroup]);
     setShowAddGroup(false);
@@ -42,12 +59,9 @@ function Groups({ token, user }) {
   const handleDeleteGroup = (groupId) => {
     if (window.confirm("Вы уверенны что хотите удалить группу?")) {
       axios
-        .delete(
-          `https://mk1-schedule-backend-ff28aedc0b67.herokuapp.com/api/groups/${groupId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        )
+        .delete(`${apiUrl}/api/groups/${groupId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(() => {
           setGroups(groups.filter((group) => group._id !== groupId));
         })
@@ -60,8 +74,13 @@ function Groups({ token, user }) {
       <h1 style={{ marginBottom: "15px" }}>Расписание занятий</h1>
       <div className="groups-list">
         <h2>Группы</h2>
+        {loading && <Loading className="profile-loading" />}
         {groups.map((group) => (
-          <div key={group._id} className="group-item">
+          <div
+            key={group._id}
+            className="group-item "
+            id={`group-${group._id}`}
+          >
             <div
               className="group-header"
               onClick={() => toggleGroup(group._id)}

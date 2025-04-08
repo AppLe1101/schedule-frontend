@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Loading from "./Loading";
 import "./styles/GradesByStudent.css";
 
 const GradesByStudent = ({ studentId, token, apiUrl, user }) => {
@@ -116,7 +117,7 @@ const GradesByStudent = ({ studentId, token, apiUrl, user }) => {
   const isEditable = (grade) =>
     user?.role === "director" || grade.teacherId?._id === user._id;
 
-  if (loading) return <div>Загрузка...</div>;
+  if (loading) return <Loading />;
 
   return (
     <div ref={containerRef} className="dairy-container">

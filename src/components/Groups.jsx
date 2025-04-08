@@ -4,7 +4,7 @@ import axios from "axios";
 import GroupDetail from "./GroupDetail";
 import AddGroupPanel from "./AddGroupPanel";
 import { CSSTransition } from "react-transition-group";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import Loading from "./Loading";
 import "./styles/Groups.css";
 
@@ -13,7 +13,8 @@ function Groups({ token, user, apiUrl }) {
   const [editing, setEditing] = useState(false);
   const [expandedGroupId, setExpandedGroupId] = useState(null);
   const [showAddGroup, setShowAddGroup] = useState(false);
-  const { groupId: highlightGroupId } = useParams();
+  const [searchParams] = useSearchParams();
+  const highlightGroupId = searchParams.get("highlight");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,7 +42,7 @@ function Groups({ token, user, apiUrl }) {
       setTimeout(() => {
         const el = document.getElementById(`group-${highlightGroupId}`);
         if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
           el.classList.add("highlighted");
           setTimeout(() => {
             el.classList.remove("highlighted");
@@ -125,7 +126,7 @@ function Groups({ token, user, apiUrl }) {
 
         {user.role === "director" && (
           <button onClick={() => setShowAddGroup(!showAddGroup)}>
-            Добавить группу
+            {showAddGroup ? "Отмена" : "Добавить"}
           </button>
         )}
       </div>

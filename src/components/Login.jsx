@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CSSTransition } from "react-transition-group";
 import axios from "axios";
+import TwoFAVerifyModal from "./TwoFAVerifyModal";
 import "./styles/Login.css";
 
 function Login({ onLogin, apiUrl }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showTwoFAModal, setShowTwoFAModal] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
+  const nodeRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,11 +22,13 @@ function Login({ onLogin, apiUrl }) {
         username,
         password,
       });
+      if (res.data.requires2FA) {
+        setUserId(res.data.userId);
+        setShowTwoFAModal(true);
+        return;
+      }
+
       const token = res.data.token;
-
-      const payloadBase64 = token.split(".")[1];
-      const decodedPayload = JSON.parse(atob(payloadBase64));
-
       const user = res.data.user;
 
       sessionStorage.setItem("token", token);
@@ -32,34 +41,59 @@ function Login({ onLogin, apiUrl }) {
   };
 
   return (
-    <div className="login-container">
-      <h2>Вход</h2>
-      {error && <p className="error-message">{error}</p>}
-      <form onSubmit={handleSubmit} className="login-form">
-        <div className="form-group">
-          <label>Имя пользователя:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            placeholder="Введите имя"
+    <div className="login-page">
+      <div className="login-container">
+        <h2>Вход</h2>
+        {error && <p className="error-message">{error}</p>}
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label>Имя пользователя:</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="Введите имя"
+            />
+          </div>
+          <div className="form-group">
+            <label>Пароль:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Введите пароль"
+            />
+          </div>
+          <button type="submit" className="submit-button">
+            Войти
+          </button>
+        </form>
+      </div>
+      {showTwoFAModal && (
+        <CSSTransition
+          nodeRef={nodeRef}
+          in={showTwoFAModal}
+          timeout={300}
+          classNames="fade-zoom"
+          unmountOnExit
+        >
+          <TwoFAVerifyModal
+            showQrCode={false}
+            ref={nodeRef}
+            show={true}
+            apiUrl={apiUrl}
+            userId={userId}
+            onClose={() => setShowTwoFAModal(false)}
+            onSuccess={(token, user) => {
+              sessionStorage.setItem("token", token);
+              sessionStorage.setItem("user", JSON.stringify(user));
+              onLogin(token, user);
+            }}
           />
-        </div>
-        <div className="form-group">
-          <label>Пароль:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="Введите пароль"
-          />
-        </div>
-        <button type="submit" className="submit-button">
-          Войти
-        </button>
-      </form>
+        </CSSTransition>
+      )}
     </div>
   );
 }

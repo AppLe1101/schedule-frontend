@@ -1,6 +1,6 @@
 .login-container {
   max-width: 360px;
-  margin: 80px auto;
+  margin: 80px auto 0 auto;
   padding: 30px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(20px) saturate(180%);
@@ -80,4 +80,25 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Появление окна */
+.fade-zoom-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+.fade-zoom-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.fade-zoom-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+.fade-zoom-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 300ms ease, transform 300ms ease;
 }

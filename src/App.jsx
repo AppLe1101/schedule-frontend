@@ -13,6 +13,7 @@ import SidebarNav from "./components/SidebarNav";
 import GradesByStudent from "./components/GradesByStudent";
 import MainPage from "./components/MainPage";
 import HomeworkPage from "./components/HomeworkPage";
+import Settings from "./components/Settings";
 import "./components/utils/axiosSetup";
 import "./App.css";
 
@@ -123,6 +124,17 @@ function App() {
               element={
                 token ? (
                   <Profile token={token} user={user} apiUrl={apiUrl} />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            <Route
+              path="/profile/:id/settings"
+              element={
+                token ? (
+                  <Settings token={token} user={user} apiUrl={apiUrl} />
                 ) : (
                   <Navigate to="/login" />
                 )

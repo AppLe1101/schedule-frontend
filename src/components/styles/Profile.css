@@ -51,6 +51,10 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
+.avatar-img.self:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
 .avatar-img {
   width: 200px;
   height: 200px;
@@ -66,4 +70,12 @@
 .self-label {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.4);
+}
+
+.profile-rating {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }

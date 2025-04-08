@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { Search } from "lucide-react";
 import "./styles/SearchBar.css";
 
 const SearchBar = ({ token, apiUrl, user }) => {
@@ -96,7 +97,9 @@ const SearchBar = ({ token, apiUrl, user }) => {
         className="search-input"
         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
       />
-      <button onClick={handleSearch}>Найти</button>
+      <button onClick={handleSearch} style={{ padding: "9px 10px" }}>
+        <Search color="black" height={"15px"} />
+      </button>
 
       <div
         className="clear-button"
@@ -127,7 +130,7 @@ const SearchBar = ({ token, apiUrl, user }) => {
                     📰 {result.title}
                   </Link>
                 ) : result.type === "group" ? (
-                  <Link to={`/groups/${result._id}`}>
+                  <Link to={`/groups?highlight=${result._id}`}>
                     <p>🏫 {result.name}</p>
                   </Link>
                 ) : result.type === "homework" ? (

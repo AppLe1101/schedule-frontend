@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios from "axios";
 import Loading from "./Loading";
 import TwoFAVerifyModal from "./TwoFAVerifyModal";
+import DelReqModal from "./DelReqModal";
 
 const Settings = ({ token, apiUrl, user }) => {
+  const { id } = useParams();
   const [twoFAEnabled, setTwoFAEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [qrCodeUrl, setQRCodeUrl] = useState(null);
@@ -14,6 +17,8 @@ const Settings = ({ token, apiUrl, user }) => {
   const [error, setError] = useState("");
   const [showDisableModal, setShowDisableModal] = useState(false);
   const [showEnableModal, setShowEnableModal] = useState(false);
+  const [showAccountDeletionModal, setShowAccountDeletionModal] =
+    useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -99,6 +104,23 @@ const Settings = ({ token, apiUrl, user }) => {
     }
   };
 
+  const handleDeleteRequestSend = async (reason) => {
+    try {
+      await axios.post(
+        `${apiUrl}/api/deletion`,
+        {
+          reason,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      toast.success("Запрос на удлаение аккаунта отправлен");
+    } catch (err) {
+      toast.error("Ошибка при отправке запроса");
+    }
+  };
+
   if (loading)
     return (
       <div>
@@ -134,6 +156,12 @@ const Settings = ({ token, apiUrl, user }) => {
 
         {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
+      <div className="account-deletion">
+        <p>Удалить аккаунт</p>
+        <button onClick={() => setShowAccountDeletionModal(true)}>
+          Удалить Аккаунт
+        </button>
+      </div>
 
       {/* Модалка при включении */}
       {showEnableModal && qrCodeUrl && (
@@ -164,6 +192,15 @@ const Settings = ({ token, apiUrl, user }) => {
             disable2FA();
             setShowDisableModal(false);
           }}
+        />
+      )}
+
+      {/* Модалка при удалении аккаунта */}
+      {showAccountDeletionModal && (
+        <DelReqModal
+          isOpen={showAccountDeletionModal}
+          onClose={() => setShowAccountDeletionModal(false)}
+          onSubmit={handleDeleteRequestSend}
         />
       )}
     </div>

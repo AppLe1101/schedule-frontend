@@ -4,11 +4,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as ProfileIcon } from "./icons/profile.svg";
 import { ReactComponent as ScheduleIcon } from "./icons/schedule.svg";
 import { ReactComponent as DiaryIcon } from "./icons/diary.svg";
-import { ReactComponent as MainPageIcon } from "./icons/mainpage.svg";
 import { ReactComponent as BellIcon } from "./icons/bell.svg";
-import { ReactComponent as HomeworkIcon } from "./icons/homework.svg";
 
-import { BookMarked, LogOut, Newspaper } from "lucide-react";
+import { BookMarked, LogOut, Newspaper, LayoutDashboard } from "lucide-react";
 import "./styles/SidebarNav.css";
 
 const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
@@ -40,7 +38,11 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
   }, [location]);
 
   const navItems = [
-    { path: `/profile/${user._id}`, label: "Профиль", icon: <ProfileIcon /> },
+    {
+      path: `/profile/${user._id}`,
+      label: "Профиль",
+      icon: <ProfileIcon />,
+    },
     { path: "/news", label: "главная", icon: <Newspaper color="black" /> },
     {
       path: "/homework",
@@ -53,6 +55,14 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
 
   const navItemsMain = [{ path: "news", label: "главная", icon: <BellIcon /> }];
 
+  const adminItems = [
+    {
+      path: "/dashboard",
+      label: "Админ панель",
+      icon: <LayoutDashboard color="black" />,
+    },
+  ];
+
   const handleLogout = () => {
     onLogout();
     navigate("/login");
@@ -60,8 +70,9 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
 
   return (
     <div className="sidebar-main">
+      {/* NOTIFICATIONS */}
       {hasNewNews && (
-        <div className="sidebar-nav-message">
+        <div className={`sidebar-nav-message ${expanded ? "none" : ""}`}>
           {navItemsMain.map((item) => (
             <Link
               key={item.path}
@@ -75,6 +86,28 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
           ))}
         </div>
       )}
+
+      {/* ADMIN SIDEBAR ELEMENTS */}
+      {(user.role === "director" || user.role === "admin") && (
+        <div
+          className={`sidebar-nav ${expanded ? "none" : ""}`}
+          style={{ padding: "15px 0" }}
+        >
+          {adminItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`sidebar-nav__item ${
+                location.pathname === item.path ? "active" : ""
+              }`}
+            >
+              <span className="sidebar-icon">{item.icon}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* MAIN SIDEBAR */}
       <div className={`sidebar-nav ${expanded ? "expanded" : ""}`}>
         {!showConfirm ? (
           <>

@@ -3,11 +3,14 @@ import axios from "axios";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import Loading from "./Loading";
 //import DefaultAvatar from "./icons/default-avatar.png";
+import { toast } from "react-toastify";
 import { Star, Settings } from "lucide-react";
+import ReportModal from "./ReportModal";
 import "./styles/Profile.css";
 
 const Profile = ({ user, token, apiUrl }) => {
   const { id } = useParams();
+  const [isReportOpen, setIsReportOpen] = useState(false);
   const [profile, setProfile] = useState(null);
   const [groupName, setGroupName] = useState("");
   const [loading, setLoading] = useState(true);
@@ -94,6 +97,25 @@ const Profile = ({ user, token, apiUrl }) => {
       console.error("Ошибка при загрузке аватара:", err);
     }
   };
+
+  const handleReportSend = async (targetId, message) => {
+    try {
+      await axios.post(
+        `${apiUrl}/api/reports`,
+        {
+          targetId,
+          message,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      toast.success("Жалоба отправлена");
+    } catch (err) {
+      toast.error("Ошибка при отправке жалобы");
+    }
+  };
+
   useEffect(() => {
     setAvatarUrl(
       avatarUrl ||
@@ -106,7 +128,7 @@ const Profile = ({ user, token, apiUrl }) => {
     return <div className="profile-not-found">Профиль не найден</div>;
 
   return (
-    <div style={{ padding: "20px" }} className="user-profile">
+    <div className="user-profile">
       <button onClick={() => navigate(-1)} className="back-button">
         ← Назад
       </button>
@@ -231,8 +253,19 @@ const Profile = ({ user, token, apiUrl }) => {
               <Settings />
             </Link>
           )}
+          {!isSelf && (
+            <button onClick={() => setIsReportOpen(true)}>Репорт</button>
+          )}
         </div>
       </div>
+      {isReportOpen && (
+        <ReportModal
+          isOpen={isReportOpen}
+          onClose={() => setIsReportOpen(false)}
+          onSubmit={handleReportSend}
+          targetId={profile._id}
+        />
+      )}
     </div>
   );
 };

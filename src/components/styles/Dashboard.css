@@ -1,0 +1,295 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  height: 100%;
+  width: 100%;
+}
+
+.sidebar-left {
+  display: flex;
+  position: relative;
+  left: 0;
+  top: 0;
+  padding: 0 10px 0 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
+  height: 100%;
+  width: 10%;
+}
+.sidebar-left p {
+  border-bottom: 2px solid #33333385;
+  padding-bottom: 15px;
+  width: 100%;
+}
+
+.tabs-content {
+  width: 90%;
+  height: 100%;
+}
+
+.tabs-buttons {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+}
+
+.tabs-buttons button {
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: none;
+  background: #ffffff22;
+  color: #000;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s;
+  backdrop-filter: blur(12px);
+}
+
+.ap-info {
+  width: 100%;
+  padding: 8px;
+  color: #343a40;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.counter {
+  position: absolute;
+  top: 65px;
+  transform: translateX(15px);
+}
+/* REPORTS */
+.reports-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.report-item {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 16px;
+  backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+  animation: fadeIn 0.2s ease-in;
+}
+.report-item:hover {
+  transform: scale(1.01);
+}
+
+.report-content {
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+.report-content strong a {
+  display: inline-block;
+  padding: 2px 6px;
+  margin: 0 2px;
+  font-weight: 500;
+  font-size: 0.95em;
+  color: #000;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px) saturate(160%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s;
+}
+.report-content strong a:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.report-message {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #343a40;
+}
+
+.report-date {
+  font-size: 13px;
+  color: #aaa;
+  margin-top: 6px;
+}
+
+.report-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.report-controls button {
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: none;
+  background: #ffffff22;
+  color: #000;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s;
+  backdrop-filter: blur(12px);
+}
+
+/* DELETE REQUESTS */
+.delete-request-tab-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+.drt-item {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 16px;
+  backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+  animation: fadeIn 0.2s ease-in;
+}
+.drt-item:hover {
+  transform: scale(1.01);
+}
+
+.drt-content {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drt-user-info {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.drt-req-username a {
+  padding: 2px 6px;
+  margin: 0 2px;
+  font-weight: 500;
+  font-size: 0.95em;
+  color: #000;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px) saturate(160%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s;
+}
+.drt-req-username a:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.drt-content small {
+  font-size: 13px;
+  color: #aaa;
+}
+
+.drt-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.drt-buttons button {
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: none;
+  background: #ffffff22;
+  color: #000;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s;
+  backdrop-filter: blur(12px);
+}
+
+/* USER REGISTRATION */
+.reg-user-container {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 500px;
+  margin: 30px auto;
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  color: #000;
+  animation: fadeIn 0.2s ease-in;
+}
+
+.reg-user-container h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.name-field-container,
+.pass-field-container,
+.role-select-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.name-input,
+.pass-input,
+.role-select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #000;
+  backdrop-filter: blur(8px);
+  outline: none;
+}
+
+.pass-field-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.pass-field-controls {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.pass-gen-button,
+.copy-button,
+.reg-button {
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: none;
+  background: #ffffff22;
+  color: #000;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s;
+  backdrop-filter: blur(12px);
+}
+
+.reg-button {
+  margin-top: 16px;
+  width: 100%;
+}

@@ -1,6 +1,8 @@
 .grades-container {
   padding: 20px;
-  margin: 20px;
+  position: relative;
+  top: 20px;
+  margin: 0 20px 20px 20px;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   background: rgba(255, 255, 255, 0.15);

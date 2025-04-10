@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import SearchBar from "./SearchBar";
 import Loading from "./Loading";
+import TiptapEditor from "./TiptapEditor";
+import NewsRenderer from "./NewsRenderer";
 import "./styles/MainPage.css";
 
 const MainPage = ({ user, token, apiUrl }) => {
@@ -15,6 +17,7 @@ const MainPage = ({ user, token, apiUrl }) => {
   const [newNews, setNewNews] = useState([]);
   const [marked, setMarked] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [content, setContent] = useState("");
   const [editForm, setEditForm] = useState({
     title: "",
     content: "",
@@ -100,9 +103,16 @@ const MainPage = ({ user, token, apiUrl }) => {
 
   const handlePublish = async () => {
     try {
-      await axios.post(`${apiUrl}/api/news`, postNews, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.post(
+        `${apiUrl}/api/news`,
+        {
+          title: postNews.title,
+          content: content,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setPostNews({ title: "", content: "" });
       const res = await axios.get(`${apiUrl}/api/news`);
       setNews(res.data);
@@ -137,7 +147,9 @@ const MainPage = ({ user, token, apiUrl }) => {
   // RETURN
   return (
     <div className="news-page glass-card">
-      <h2 className="news-title">Новости</h2>
+      <h2 className="news-title" style={{ marginTop: "0" }}>
+        Новости
+      </h2>
       <SearchBar token={token} apiUrl={apiUrl} user={user} />
       {/* Запостить новое сообщение */}
       {isAuthorized && (
@@ -150,12 +162,11 @@ const MainPage = ({ user, token, apiUrl }) => {
               setPostNews({ ...postNews, title: e.target.value })
             }
           />
-          <textarea
-            placeholder="Контент"
-            value={postNews.content}
-            onChange={(e) =>
-              setPostNews({ ...postNews, content: e.target.value })
-            }
+          <TiptapEditor
+            apiUrl={apiUrl}
+            token={token}
+            initialContent={news?.content}
+            onChange={(json) => setContent(json)}
           />
           <button onClick={handlePublish}>Опубликовать</button>
         </div>
@@ -188,12 +199,13 @@ const MainPage = ({ user, token, apiUrl }) => {
                         }
                         className="edit-input-field"
                       />
-                      <textarea
-                        value={editForm.content}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, content: e.target.value })
+                      <TiptapEditor
+                        apiUrl={apiUrl}
+                        token={token}
+                        initialContent={editForm.content}
+                        onChange={(json) =>
+                          setEditForm((prev) => ({ ...prev, content: json }))
                         }
-                        className="edit-input-textarea"
                       />
                       <input
                         value={editForm.image}
@@ -215,7 +227,7 @@ const MainPage = ({ user, token, apiUrl }) => {
                       {item.image && (
                         <img src={item.image} alt="" className="news-image" />
                       )}
-                      <p className="news-content">{item.content}</p>
+                      <NewsRenderer content={item.content} />
                       <small>
                         Опубликовано:{" "}
                         {new Date(item.createdAt).toLocaleString()}

@@ -14,6 +14,9 @@ import GradesByStudent from "./components/GradesByStudent";
 import MainPage from "./components/MainPage";
 import HomeworkPage from "./components/HomeworkPage";
 import Settings from "./components/Settings";
+import Dashboard from "./components/Dashboard";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./components/utils/axiosSetup";
 import "./App.css";
 
@@ -173,9 +176,21 @@ function App() {
                 )
               }
             />
+
+            <Route
+              path="/dashboard"
+              element={
+                token ? (
+                  <Dashboard token={token} user={user} apiUrl={apiUrl} />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
           </Routes>
         </main>
       </div>
+      <ToastContainer />
     </Router>
   );
 }

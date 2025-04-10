@@ -4,6 +4,9 @@ body {
   background-color: rgb(206, 206, 206);
   overflow-x: hidden;
 }
+main {
+  height: 100vh;
+}
 #root {
   width: 100%;
   display: flex;
@@ -29,6 +32,10 @@ body {
 h1 {
   margin: 0;
   padding: 0;
+}
+h2 {
+  padding: 0;
+  margin: 10px;
 }
 button {
   background: rgba(255, 255, 255, 0.445);
@@ -56,6 +63,51 @@ button:hover {
   100% {
     background-color: rgba(255, 255, 255, 0.1);
   }
+}
+
+.mention-link {
+  display: inline-block;
+  padding: 2px 6px;
+  margin: 0 2px;
+  font-weight: 500;
+  font-size: 0.95em;
+  color: #000;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px) saturate(160%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s;
+  animation: userHoverAnim 3s ease-in-out infinite;
+}
+
+.mention-link:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.mention-dropdown {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  z-index: 100;
+}
+.mention-item {
+  padding: 4px 8px;
+  cursor: pointer;
+}
+.mention-item:hover {
+  background: #f3f4f6;
+}
+.spoiler {
+  background-color: #ddd;
+  color: transparent;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.spoiler:hover {
+  color: inherit;
 }
 
 @media screen and (max-width: 768px) {

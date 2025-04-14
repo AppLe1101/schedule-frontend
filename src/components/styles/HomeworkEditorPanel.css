@@ -116,3 +116,46 @@
   box-shadow: 0 0px 12px rgba(0, 0, 0, 0.25);
   outline: none !important;
 }
+@media (max-width: 768px) {
+  .homework-editor {
+    margin: 0 16px;
+  }
+
+  .homework-main-header-h1 {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .input-type-text,
+  .input-type-date,
+  .input-type-area,
+  .input-type-file#file-upload-button {
+    width: 90% !important;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .input-type-area {
+    min-height: 60px;
+  }
+
+  .preview-image {
+    max-width: 70px;
+    max-height: 70px;
+  }
+
+  .delete-file-button {
+    font-size: 12px;
+    padding: 2px 4px;
+  }
+
+  .homework-search-bar input {
+    width: 100%;
+    font-size: 13px;
+  }
+
+  .homework-main-header {
+    gap: 6px;
+  }
+}

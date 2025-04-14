@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./styles/DelReqModal.css";
 
 const DelReqModal = ({ isOpen, onClose, onSubmit }) => {
   const [reason, setReason] = useState("");
@@ -12,17 +13,25 @@ const DelReqModal = ({ isOpen, onClose, onSubmit }) => {
 
   return (
     <div className="drm-container">
-      <button onClick={onClose} className="">
-        Отмена
-      </button>
-      <h2>Удалить акканут?</h2>
-      <textarea
-        onChange={(e) => setReason(e.target.value)}
-        className="delete-reason"
-      />
-      <button onClick={handleSend} className="submit-deletion">
-        Удалить
-      </button>
+      <div className="modal">
+        <h2>Удалить аккаунт?</h2>
+        <textarea
+          onChange={(e) => setReason(e.target.value)}
+          className="delete-reason"
+          placeholder="Причина удаления (обязательно)"
+          required
+        />
+        <div
+          style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
+        >
+          <button onClick={onClose} className="cancel-deletion">
+            Отмена
+          </button>
+          <button onClick={handleSend} className="submit-deletion">
+            Удалить
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

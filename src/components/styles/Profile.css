@@ -1,5 +1,8 @@
 .user-profile {
-  padding: 55px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 55px 55px 0 55px;
 }
 
 .back-button {
@@ -77,4 +80,62 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
+}
+@media (max-width: 768px) {
+  .user-profile {
+    padding: 20px 16px;
+  }
+
+  .profile-card {
+    width: 90%;
+  }
+
+  .back-button {
+    top: 100px;
+    left: 10px;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .profile-card {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .profile-info {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .profile-avatar,
+  .avatar-img {
+    width: 140px;
+    height: 140px;
+    border-radius: 30px;
+  }
+
+  .profile-info h2 {
+    font-size: 20px;
+  }
+
+  .self-label {
+    font-size: 12px;
+  }
+
+  .profile-rating {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .profile-rating p {
+    margin: 0;
+  }
+
+  .comment-section {
+    margin-top: 16px;
+    width: 90%;
+  }
 }

@@ -128,3 +128,40 @@ button:focus {
   font-size: 0.9em;
   margin-top: 6px;
 }
+
+@media (max-width: 768px) {
+  .grades-container {
+    padding: 12px;
+    margin: 0 8px;
+  }
+
+  .group-members {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .member-column {
+    min-width: 100%;
+  }
+
+  .member-item {
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .member-item span {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .member-item button {
+    padding: 7px;
+    font-size: 13px;
+  }
+
+  select,
+  button {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+}

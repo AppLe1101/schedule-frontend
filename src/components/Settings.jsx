@@ -4,10 +4,13 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import Loading from "./Loading";
 import TwoFAVerifyModal from "./TwoFAVerifyModal";
+import PasswordConfirmModal from "./PasswordConfirmModal";
 import DelReqModal from "./DelReqModal";
 
-const Settings = ({ token, apiUrl, user }) => {
+const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
   const { id } = useParams();
+  const [stage, setStage] = useState("idle"); // "password" | "2fa" | "confirm"
+  const [password, setPassword] = useState("");
   const [twoFAEnabled, setTwoFAEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [qrCodeUrl, setQRCodeUrl] = useState(null);
@@ -104,6 +107,10 @@ const Settings = ({ token, apiUrl, user }) => {
     }
   };
 
+  const handleDeleteClick = () => {
+    setStage("password");
+  };
+
   const handleDeleteRequestSend = async (reason) => {
     try {
       await axios.post(
@@ -156,12 +163,55 @@ const Settings = ({ token, apiUrl, user }) => {
 
         {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
+
+      <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+        <option value="default-light">Светлая</option>
+        <option value="default-dark">Темная</option>
+        <option value="default-ultra-dark">Ночь</option>
+      </select>
+
       <div className="account-deletion">
         <p>Удалить аккаунт</p>
-        <button onClick={() => setShowAccountDeletionModal(true)}>
-          Удалить Аккаунт
-        </button>
+        <button onClick={handleDeleteClick}>Удалить Аккаунт</button>
       </div>
+
+      {/* ===================================================МОДАЛКИ================================================== */}
+
+      {/* Шаг 1: подтверждение пароля */}
+      {stage === "password" && (
+        <PasswordConfirmModal
+          onClose={() => setStage("idle")}
+          onConfirm={(enteredPassword) => {
+            setPassword(enteredPassword);
+            if (twoFAEnabled) {
+              setStage("2fa");
+            } else {
+              setStage("confirm");
+            }
+          }}
+        />
+      )}
+
+      {/* Шаг 2: 2FA (если включена) */}
+      {stage === "2fa" && (
+        <TwoFAVerifyModal
+          mode=""
+          apiUrl={apiUrl}
+          userId={user._id}
+          showQRCode={false}
+          onClose={() => setStage("idle")}
+          onSuccess={() => setStage("confirm")}
+        />
+      )}
+
+      {/* Шаг 3: подтверждение причины удаления */}
+      {stage === "confirm" && (
+        <DelReqModal
+          isOpen={true}
+          onClose={() => setStage("idle")}
+          onSubmit={handleDeleteRequestSend}
+        />
+      )}
 
       {/* Модалка при включении */}
       {showEnableModal && qrCodeUrl && (
@@ -188,19 +238,10 @@ const Settings = ({ token, apiUrl, user }) => {
           userId={user._id}
           showQRCode={false}
           onClose={() => setShowDisableModal(false)}
-          onSuccess={(token, user) => {
+          onSuccess={() => {
             disable2FA();
             setShowDisableModal(false);
           }}
-        />
-      )}
-
-      {/* Модалка при удалении аккаунта */}
-      {showAccountDeletionModal && (
-        <DelReqModal
-          isOpen={showAccountDeletionModal}
-          onClose={() => setShowAccountDeletionModal(false)}
-          onSubmit={handleDeleteRequestSend}
         />
       )}
     </div>

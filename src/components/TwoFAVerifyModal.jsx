@@ -51,8 +51,8 @@ const TwoFAVerifyModal = forwardRef(
 
           // если пришёл токен — сохраняем
           if (res.data.token) {
-            sessionStorage.setItem("token", res.data.token);
-            sessionStorage.setItem("user", JSON.stringify(res.data.user));
+            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
           }
 
           onSuccess(res.data.token, res.data.user); // можно и null, если нет

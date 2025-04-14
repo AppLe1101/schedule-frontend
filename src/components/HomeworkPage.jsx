@@ -6,6 +6,9 @@ const HomeworkPage = ({ token, apiUrl, user }) => {
   if (!user || !token) return null;
 
   if (user.role === "student") {
+    if (!user.groupId) {
+      return <p>Вы не состоите в группе</p>;
+    }
     const groupId = user.groupId[0];
     return (
       <HomeworkCalendar

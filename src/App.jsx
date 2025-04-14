@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
-  HashRouter as Router,
+  BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import Login from "./components/Login";
 import Groups from "./components/Groups";
@@ -15,6 +16,7 @@ import MainPage from "./components/MainPage";
 import HomeworkPage from "./components/HomeworkPage";
 import Settings from "./components/Settings";
 import Dashboard from "./components/Dashboard";
+import HomeworkItemPage from "./components/HomeworkItemPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./components/utils/axiosSetup";
@@ -24,34 +26,71 @@ import "./App.css";
 const apiUrl = "https://mk1-schedule-backend-ff28aedc0b67.herokuapp.com";
 
 function App() {
-  const [token, setToken] = useState(sessionStorage.getItem("token") || "");
-  const [user, setUser] = useState(
-    JSON.parse(sessionStorage.getItem("user")) || null
+  const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
+  const location = useLocation();
+
+  function decodeBase64Url(base64url) {
+    let base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
+    while (base64.length % 4 !== 0) {
+      base64 += "=";
+    }
+    return atob(base64);
+  }
+
+  const systemPrefersDark = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+  const [theme, setTheme] = useState(
+    sessionStorage.getItem("theme") || (systemPrefersDark ? "dark" : "light")
   );
 
   useEffect(() => {
-    const userData = JSON.parse(sessionStorage.getItem("user"));
-    const token = sessionStorage.getItem("token");
+    const userDataStr = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
 
-    if (userData && token) {
-      try {
-        const decoded = JSON.parse(atob(token.split(".")[1]));
-        if (decoded.exp * 1000 < Date.now()) {
-          handleLogout();
-          window.location.href = "/login";
-          throw new Error("Token expired");
-        }
-      } catch (e) {
+    if (!userDataStr || !token) {
+      handleLogout();
+      return;
+    }
+
+    try {
+      const userData = JSON.parse(userDataStr);
+      const tokenParts = token.split(".");
+      if (tokenParts.length !== 3) throw new Error("Некоректрый токен");
+      const payload = decodeBase64Url(tokenParts[1]);
+      const decoded = JSON.parse(payload);
+
+      if (decoded.exp * 1000 < Date.now()) {
+        console.warn("Токен истек");
         handleLogout();
-        window.location.href = "/login";
-        throw new Error("Invalid token");
+        return;
       }
+
+      setToken(token);
+      setUser(userData);
+    } catch (e) {
+      console.error("Ошибка при разборке токена", e);
+      handleLogout();
     }
   }, []);
 
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    sessionStorage.setItem("theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    if (token && user) {
+      if (location.pathname !== "/login") {
+        sessionStorage.setItem("lastVisited", location.pathname);
+      }
+    }
+  }, [location.pathname, token, user]);
+
   const handleLogin = (token, userData) => {
-    sessionStorage.setItem("token", token);
-    sessionStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(userData));
     setToken(token);
     setUser(userData);
   };
@@ -59,12 +98,13 @@ function App() {
   const handleLogout = () => {
     setToken("");
     setUser(null);
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    sessionStorage.clear();
   };
 
   return (
-    <Router>
+    <>
       {token && (
         <SidebarNav
           onLogout={handleLogout}
@@ -80,15 +120,16 @@ function App() {
         <main>
           <Routes>
             <Route
-              path="/"
-              element={<Navigate to={token ? "/groups" : "/login"} />}
-            />
-
-            <Route
               path="/login"
               element={
                 token && user ? (
-                  <Navigate to="/groups" />
+                  <Navigate
+                    to={
+                      sessionStorage.getItem("lastVisited") === "/login"
+                        ? "/news"
+                        : sessionStorage.getItem("lastVisited") || "/news"
+                    }
+                  />
                 ) : (
                   <Login onLogin={handleLogin} apiUrl={apiUrl} />
                 )
@@ -137,7 +178,13 @@ function App() {
               path="/profile/:id/settings"
               element={
                 token ? (
-                  <Settings token={token} user={user} apiUrl={apiUrl} />
+                  <Settings
+                    token={token}
+                    user={user}
+                    apiUrl={apiUrl}
+                    theme={theme}
+                    setTheme={setTheme}
+                  />
                 ) : (
                   <Navigate to="/login" />
                 )
@@ -178,6 +225,17 @@ function App() {
             />
 
             <Route
+              path="/homework/:id"
+              element={
+                token ? (
+                  <HomeworkItemPage token={token} user={user} apiUrl={apiUrl} />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            <Route
               path="/dashboard"
               element={
                 token ? (
@@ -191,7 +249,7 @@ function App() {
         </main>
       </div>
       <ToastContainer />
-    </Router>
+    </>
   );
 }
 

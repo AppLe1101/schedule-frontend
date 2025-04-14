@@ -4,8 +4,9 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import Loading from "./Loading";
 //import DefaultAvatar from "./icons/default-avatar.png";
 import { toast } from "react-toastify";
-import { Star, Settings } from "lucide-react";
+import { Star, Settings, BadgeCheck } from "lucide-react";
 import ReportModal from "./ReportModal";
+import CommentSection from "./CommentSection";
 import "./styles/Profile.css";
 
 const Profile = ({ user, token, apiUrl }) => {
@@ -92,7 +93,7 @@ const Profile = ({ user, token, apiUrl }) => {
       );
       user.avatar = newAvatarUrl;
       setAvatarUrl(newAvatarUrl);
-      sessionStorage.setItem("user", JSON.stringify({ ...user }));
+      localStorage.setItem("user", JSON.stringify({ ...user }));
     } catch (err) {
       console.error("Ошибка при загрузке аватара:", err);
     }
@@ -168,6 +169,13 @@ const Profile = ({ user, token, apiUrl }) => {
         <div className="profile-info">
           <div className="profile-name">
             {profile.username}{" "}
+            {profile._id === "67ab1aa0af53f6eca8443d6e" && (
+              <BadgeCheck
+                color="#faa307"
+                height={"20px"}
+                style={{ transform: "translateY(5px)" }}
+              />
+            )}
             {isSelf && <span className="self-label">(вы)</span>}{" "}
           </div>
           <p>
@@ -264,6 +272,14 @@ const Profile = ({ user, token, apiUrl }) => {
           onClose={() => setIsReportOpen(false)}
           onSubmit={handleReportSend}
           targetId={profile._id}
+        />
+      )}
+      {profile._id === "67ab1aa0af53f6eca8443d6e" && (
+        <CommentSection
+          apiUrl={apiUrl}
+          token={token}
+          targetUserId={profile._id}
+          currentUser={user}
         />
       )}
     </div>

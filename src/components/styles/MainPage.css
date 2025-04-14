@@ -124,7 +124,7 @@
   align-items: center;
   gap: 15px;
 }
-.edit-input-field {
+.tiptap.ProseMirror {
   padding: 10px 12px;
   border-radius: 12px;
   width: calc(100% - 25px);
@@ -134,7 +134,7 @@
   color: #000;
   font-size: 14px;
 }
-.edit-input-textarea {
+.edit-input-textarea div {
   min-height: 15px;
   height: auto;
   width: calc(100% - 25px);

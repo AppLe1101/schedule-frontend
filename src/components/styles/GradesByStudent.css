@@ -97,3 +97,36 @@
     background-position: -20% 50%;
   }
 }
+
+@media (max-width: 768px) {
+  .dairy-table {
+    width: 100%;
+    font-size: 13px;
+  }
+
+  .dairy-container td {
+    height: auto;
+    padding: 4px;
+    font-size: 12px;
+  }
+
+  .table-item {
+    font-size: 13px;
+    padding: 6px;
+  }
+
+  .add-grade-container {
+    margin-top: 12px;
+    padding: 0 8px;
+  }
+
+  .add-grade-field {
+    font-size: 13px;
+    width: 100%;
+  }
+
+  .user-profile-link {
+    font-size: 13px;
+    padding: 6px 8px;
+  }
+}

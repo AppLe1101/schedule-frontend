@@ -1,0 +1,128 @@
+main {
+  height: auto !important;
+}
+.hw-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  color: #000;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.hw-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.hw-info-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+.hw-info-header h3 {
+  font-size: 16px;
+  color: #666;
+}
+
+.hw-about {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+.hw-teacher {
+  margin: 0;
+  padding: 0;
+}
+
+.hw-author {
+  display: inline-flex;
+  gap: 5px;
+  padding: 2px 6px;
+  margin: 0 2px;
+  font-weight: 500;
+  font-size: 0.95em;
+  color: #000;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px) saturate(160%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s;
+  animation: userHoverAnim 3s ease-in-out infinite;
+  user-select: none;
+}
+.hw-author:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.hw-description {
+  font-size: 16px;
+  line-height: 1.6;
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+.hw-files {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+.hw-files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.file-link {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: #000;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+.file-link:hover {
+  background: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.hw-editmode {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.hw-editmode input,
+.hw-editmode textarea {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+.hw-editmode button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: #007aff;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.hw-editmode button:hover {
+  background: #0051c4;
+}

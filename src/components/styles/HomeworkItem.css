@@ -1,7 +1,7 @@
 .homework-item {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
   border-radius: 14px;
@@ -13,12 +13,9 @@
 }
 
 .homework-files {
-  position: absolute;
-  right: 245px;
   display: flex;
   align-items: center;
   justify-content: right;
-  width: 400px;
 }
 
 .homework-file-link {
@@ -74,6 +71,10 @@
   max-width: 60%;
 }
 
+.homework-date {
+  margin-right: 10px;
+}
+
 .delete-btn {
   position: absolute;
   top: 50%;
@@ -85,4 +86,92 @@
   cursor: pointer;
   transition: background 0.2s ease;
   transform: translateY(-50%);
+}
+
+@media (max-width: 768px) {
+  .homework-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
+    gap: 10px;
+    height: auto;
+  }
+
+  .homework-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .subject {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .teacher {
+    font-size: 13px;
+    color: #ccc;
+  }
+
+  .homework-content {
+    font-size: 13px;
+    color: #eee;
+  }
+
+  .homework-files {
+    display: none;
+  }
+
+  .homework-file-link {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .delete-btn {
+    align-self: flex-end;
+    font-size: 12px;
+    padding: 4px 10px;
+    transform: none;
+    margin-top: 5px;
+  }
+
+  .homework-description-wrapper {
+    position: relative;
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .homework-description {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    padding-right: 50px;
+    vertical-align: middle;
+  }
+
+  /* красивый градиент-блюр справа */
+  .homework-description-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 100%;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.8), transparent);
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+  }
 }

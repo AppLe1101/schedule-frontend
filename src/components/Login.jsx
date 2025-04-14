@@ -31,8 +31,8 @@ function Login({ onLogin, apiUrl }) {
       const token = res.data.token;
       const user = res.data.user;
 
-      sessionStorage.setItem("token", token);
-      sessionStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
       onLogin(token, user);
     } catch (err) {
       console.error(err);
@@ -87,8 +87,8 @@ function Login({ onLogin, apiUrl }) {
             userId={userId}
             onClose={() => setShowTwoFAModal(false)}
             onSuccess={(token, user) => {
-              sessionStorage.setItem("token", token);
-              sessionStorage.setItem("user", JSON.stringify(user));
+              localStorage.setItem("token", token);
+              localStorage.setItem("user", JSON.stringify(user));
               onLogin(token, user);
             }}
           />

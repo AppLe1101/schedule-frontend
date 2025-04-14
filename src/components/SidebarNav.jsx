@@ -19,8 +19,8 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const storedUser = JSON.parse(sessionStorage.getItem("user"));
-        const token = sessionStorage.getItem("token");
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        const token = localStorage.getItem("token");
         const response = await fetch(`${apiUrl}/api/news`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -90,7 +90,7 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
       {/* ADMIN SIDEBAR ELEMENTS */}
       {(user.role === "director" || user.role === "admin") && (
         <div
-          className={`sidebar-nav ${expanded ? "none" : ""}`}
+          className={`sidebar-nav-admin ${expanded ? "none" : ""}`}
           style={{ padding: "15px 0" }}
         >
           {adminItems.map((item) => (

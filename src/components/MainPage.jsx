@@ -167,6 +167,7 @@ const MainPage = ({ user, token, apiUrl }) => {
             token={token}
             initialContent={news?.content}
             onChange={(json) => setContent(json)}
+            className="edit-input-textarea"
           />
           <button onClick={handlePublish}>Опубликовать</button>
         </div>
@@ -206,6 +207,7 @@ const MainPage = ({ user, token, apiUrl }) => {
                         onChange={(json) =>
                           setEditForm((prev) => ({ ...prev, content: json }))
                         }
+                        className="edit-input-textarea"
                       />
                       <input
                         value={editForm.image}

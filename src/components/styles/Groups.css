@@ -101,6 +101,43 @@ input[type="password"]:focus {
   cursor: pointer;
 }
 
+@media screen and (max-width: 768px) {
+  .groups-container {
+    padding: 16px;
+    margin: 0 8px;
+    border-radius: 20px;
+  }
+
+  .group-item {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 16px;
+  }
+
+  .group-header {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .group-detail h3 {
+    font-size: 16px;
+  }
+
+  .day-schedule h4 {
+    font-size: 14px;
+  }
+
+  .group-editor-item {
+    padding: 8px;
+  }
+
+  .delete-lesson-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+}
+
 @media screen and (max-width: 590px) {
   .schedule-table {
     font-size: 14px;

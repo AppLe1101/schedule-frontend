@@ -25,6 +25,13 @@ const TwoFAVerifyModal = forwardRef(
       if (value && index < 5) inputs.current[index + 1].focus();
     };
 
+    useEffect(() => {
+      const fullCode = code.join("");
+      if (fullCode.length === 6) {
+        handleSubmit();
+      }
+    }, [code]);
+
     const handleKeyDown = (e, index) => {
       if (e.key === "Backspace" && !code[index] && index > 0) {
         inputs.current[index - 1].focus();
@@ -55,7 +62,9 @@ const TwoFAVerifyModal = forwardRef(
             localStorage.setItem("user", JSON.stringify(res.data.user));
           }
 
-          onSuccess(res.data.token, res.data.user); // можно и null, если нет
+          setTimeout(() => {
+            onSuccess(res.data.token, res.data.user);
+          }, 600);
         } else {
           setError("Неверный код");
           setSuccess(false);

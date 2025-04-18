@@ -81,6 +81,142 @@
   align-items: center;
   gap: 10px;
 }
+
+.badge-list-profile {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 2px;
+  backdrop-filter: blur(16px) saturate(180%);
+}
+
+.profile-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.profile-badge {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 30px;
+  padding: 4px 4px;
+  display: flex;
+  align-items: center;
+  cursor: default;
+  transition: transform 0.2s ease;
+}
+
+.profile-badge img {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+}
+
+.profile-badge.add-badge {
+  background: rgba(255, 255, 255, 0.4);
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+
+.badge-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px) saturate(180%);
+  padding: 15px;
+  border-radius: 30px;
+  z-index: 10;
+  width: 300px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.badge-picker h4 {
+  margin: 1px;
+}
+
+.badge-picker-button-container {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  width: 100%;
+  justify-content: center;
+}
+
+.badge-picker-button-container button {
+  width: 50%;
+}
+
+.badge-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.badge-option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 5px;
+  text-align: center;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  transition: 0.2s;
+}
+
+.badge-option img {
+  width: 27px;
+  height: 27px;
+  border-radius: 8px;
+}
+
+.badge-option.selected {
+  border-color: #3d5af1;
+  background: #eef2ff;
+}
+
+.description-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.description-header {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.description-edit-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
 @media (max-width: 768px) {
   .user-profile {
     padding: 20px 16px;

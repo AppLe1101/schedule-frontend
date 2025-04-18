@@ -4,9 +4,11 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import Loading from "./Loading";
 //import DefaultAvatar from "./icons/default-avatar.png";
 import { toast } from "react-toastify";
-import { Star, Settings, BadgeCheck } from "lucide-react";
+import { Star, Settings, BadgeCheck, Plus, PencilLine } from "lucide-react";
 import ReportModal from "./ReportModal";
 import CommentSection from "./CommentSection";
+import TiptapEditor from "./TiptapEditor";
+import DescriptionRenderer from "./DescriptionRenderer";
 import "./styles/Profile.css";
 
 const Profile = ({ user, token, apiUrl }) => {
@@ -18,10 +20,17 @@ const Profile = ({ user, token, apiUrl }) => {
   const [avatarUrl, setAvatarUrl] = useState(user?.avatar || "");
   const fileInputRef = useRef(null);
   const [rating, setRating] = useState(null);
+  const [allBadges, setAllBadges] = useState([]);
+  const [showBadgePicker, setShowBadgePicker] = useState(false);
+  const [editingDescription, setEditingDescription] = useState(false);
+  const [newDescription, setNewDescription] = useState("");
   const navigate = useNavigate();
   const isSelf = user?._id === id;
+  const ownedBadges = allBadges.filter((b) => profile.badges?.includes(b._id));
 
   useEffect(() => {
+    setLoading(true);
+    //setProfile(null);
     const fetchProfile = async () => {
       try {
         const res = await axios.get(`${apiUrl}/api/users/${id}`, {
@@ -39,6 +48,12 @@ const Profile = ({ user, token, apiUrl }) => {
           setGroupName(groupRes.data.name);
           setAvatarUrl(res.data.avatar);
         }
+
+        //setAvatarUrl(
+        //  avatarUrl ||
+        //    "https://res.cloudinary.com/dbw9zoxts/image/upload/v1743674361/avatars/nufw7lvuhkqy9jgjorbv.png"
+        //);
+
         const ratingRes = await axios.post(
           `${apiUrl}/api/users/${id}/update-rating`,
           null,
@@ -51,8 +66,16 @@ const Profile = ({ user, token, apiUrl }) => {
 
         if (ratingRes.data.rating !== undefined) {
           setRating(ratingRes.data.rating);
-          console.log("Рейтинг:", ratingRes.data.rating);
         }
+
+        //if (profile.description) {
+        //  setNewDescription(profile.description);
+        //}
+
+        const badgesRes = await axios.get(`${apiUrl}/api/badges`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setAllBadges(badgesRes.data);
       } catch (err) {
         console.error("Ошибка при загрузке профиля:", err);
       } finally {
@@ -62,6 +85,19 @@ const Profile = ({ user, token, apiUrl }) => {
 
     fetchProfile();
   }, [id, apiUrl, token]);
+
+  useEffect(() => {
+    setAvatarUrl(
+      avatarUrl ||
+        "https://res.cloudinary.com/dbw9zoxts/image/upload/v1743674361/avatars/nufw7lvuhkqy9jgjorbv.png"
+    );
+  }, [user]);
+
+  useEffect(() => {
+    if (profile?.description) {
+      setNewDescription(profile.description);
+    }
+  }, [profile?.description]);
 
   const handleAvatarClick = () => {
     fileInputRef.current.click();
@@ -117,14 +153,61 @@ const Profile = ({ user, token, apiUrl }) => {
     }
   };
 
-  useEffect(() => {
-    setAvatarUrl(
-      avatarUrl ||
-        "https://res.cloudinary.com/dbw9zoxts/image/upload/v1743674361/avatars/nufw7lvuhkqy9jgjorbv.png"
-    );
-  }, [user]);
+  const toggleBadge = (badge) => {
+    let updated = [...(profile.visibleBadges || [])];
 
-  if (loading) return <Loading className="profile-loading" />;
+    // Убедимся, что там только строки
+    updated = updated.filter((id) => typeof id === "string");
+
+    if (updated.includes(badge._id)) {
+      updated = updated.filter((id) => id !== badge._id);
+    } else if (updated.length < 5) {
+      updated.push(badge._id); // Только ID
+    }
+
+    setProfile((prev) => ({
+      ...prev,
+      visibleBadges: updated,
+    }));
+  };
+
+  const saveVisibleBadges = async () => {
+    try {
+      const ids = profile.visibleBadges.filter((id) => typeof id === "string");
+      await axios.put(
+        `${apiUrl}/api/users/${user._id}/update-visible-badges`,
+        { visibleBadges: ids },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      toast.success("Значки обновлены!");
+      setShowBadgePicker(false);
+    } catch (err) {
+      console.error("Ошибка обновления значков", err);
+      toast.error("Ошибка при сохранении значков");
+    }
+  };
+
+  const saveDescription = async () => {
+    try {
+      await axios.put(
+        `${apiUrl}/api/users/${user._id}/update-description`,
+        { description: newDescription },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setProfile((p) => ({ ...p, description: newDescription }));
+      setEditingDescription(false);
+      toast.success("Описание обновлено!");
+    } catch (err) {
+      toast.error("Ошибка при обновлении описания");
+      console.error("Ошибка:", err);
+    }
+  };
+
+  if (loading || !profile) return <Loading className="profile-loading" />;
   if (!profile)
     return <div className="profile-not-found">Профиль не найден</div>;
 
@@ -177,6 +260,62 @@ const Profile = ({ user, token, apiUrl }) => {
               />
             )}
             {isSelf && <span className="self-label">(вы)</span>}{" "}
+          </div>
+          <div className="badge-list-profile">
+            {(profile.visibleBadges?.length > 0 || isSelf) && (
+              <div className="profile-badges">
+                {profile.visibleBadges
+                  ?.map((id) => allBadges.find((b) => b._id === id))
+                  .filter(Boolean)
+                  .map((badge) => (
+                    <div
+                      key={badge._id}
+                      className="profile-badge"
+                      title={badge.name}
+                    >
+                      <img src={badge.icon} alt={badge.name} />
+                    </div>
+                  ))}
+                {isSelf && (
+                  <div
+                    className="profile-badge add-badge"
+                    onClick={() => setShowBadgePicker(true)}
+                    title="Выбрать значки"
+                  >
+                    <Plus color="gray" />
+                  </div>
+                )}
+                {showBadgePicker && (
+                  <div className="badge-picker">
+                    <h4>Выберите до 5 значков</h4>
+                    <div className="badge-options">
+                      {ownedBadges.map((badge) => {
+                        const isSelected = profile.visibleBadges?.includes(
+                          badge._id
+                        );
+                        return (
+                          <div
+                            key={badge._id}
+                            className={`badge-option ${
+                              isSelected ? "selected" : ""
+                            }`}
+                            onClick={() => toggleBadge(badge)}
+                          >
+                            <img src={badge.icon} alt={badge.name} />
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="badge-picker-button-container">
+                      <button onClick={saveVisibleBadges}>💾 Сохранить</button>
+                      <button onClick={() => setShowBadgePicker(false)}>
+                        ✖ Закрыть
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <p>
             <small>
@@ -274,6 +413,48 @@ const Profile = ({ user, token, apiUrl }) => {
           targetId={profile._id}
         />
       )}
+      <div className="description-container">
+        <div className="description-header">
+          <h3>О себе</h3>
+          {isSelf && !editingDescription && (
+            <button
+              onClick={() => setEditingDescription(true)}
+              className="description-edit-button"
+              title="Редактировать описание"
+            >
+              <PencilLine height={"20px"} width={"20px"} />
+            </button>
+          )}
+        </div>
+
+        {editingDescription ? (
+          isSelf && (
+            <>
+              <TiptapEditor
+                apiUrl={apiUrl}
+                token={token}
+                initialContent={profile.description}
+                onChange={(html) => setNewDescription(html)}
+              />
+              <div className="desc-buttons">
+                <button onClick={saveDescription}>💾 Сохранить</button>
+                <button onClick={() => setEditingDescription(false)}>
+                  ✖ Отмена
+                </button>
+              </div>
+            </>
+          )
+        ) : profile.description ? (
+          <div className="profile-description">
+            <DescriptionRenderer content={profile.description} />
+          </div>
+        ) : (
+          <div className="no-description">
+            {isSelf ? "Описание не добавлено." : "Описание отсутствует."}
+          </div>
+        )}
+      </div>
+
       {profile._id === "67ab1aa0af53f6eca8443d6e" && (
         <CommentSection
           apiUrl={apiUrl}

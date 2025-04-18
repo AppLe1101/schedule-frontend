@@ -1,0 +1,304 @@
+.badges-tab {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 10px;
+  width: 90%;
+}
+
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid transparent;
+  border-radius: 16px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  width: 100px;
+  height: 100px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.badge-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  margin-bottom: 5px;
+}
+
+.badge-item span {
+  font-size: 12px;
+  text-align: center;
+  color: #333;
+  font-weight: 500;
+}
+
+.badge-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.badge-item.selected {
+  border-color: #4f46e5;
+  background: rgba(79, 70, 229, 0.1);
+}
+
+.badge-upload-label {
+  margin: 10px 0;
+  padding: 10px;
+  border: 2px dashed #aaa;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  color: #555;
+}
+
+.badge-icon-preview {
+  max-width: 190px;
+  width: 190px;
+  max-height: 190px;
+  height: 190px;
+  margin-top: 5px;
+  border-radius: 16px;
+}
+
+.badge-icon-wrapper {
+  width: 190px;
+  height: 190px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.badge-icon-wrapper img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+.badge-menu {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  z-index: 99;
+  border: 2px dashed #aaa;
+  border-radius: 30px;
+  padding: 15px;
+  gap: 5px;
+  animation: fadeIn 0.3s ease;
+}
+
+.badge-menu-center {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px;
+  animation: fadeIn 0.3s ease;
+}
+.badge-edit-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  animation: fadeIn 0.3s ease;
+}
+.badge-edit-buttons button {
+  width: 100%;
+  display: flex;
+}
+.badge-edit-buttons button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.badge-menu-right {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  animation: fadeIn 0.3s ease;
+}
+.badge-menu-right h4 {
+  margin: 0;
+}
+.badge-menu-right input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #000;
+  backdrop-filter: blur(8px);
+  outline: none;
+}
+.badge-menu-right input:focus {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  z-index: 99;
+}
+.badge-menu-right button {
+  width: 100%;
+  display: flex;
+}
+
+.badge-edit-form-overlay {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeIn 0.3s ease;
+}
+
+.badge-edit-form-overlay input {
+  width: 380px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #000;
+  backdrop-filter: blur(8px);
+  outline: none;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-search-container {
+  position: relative;
+}
+
+.user-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 180px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.445);
+  backdrop-filter: blur(10px) saturate(180%);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0 0;
+  outline: 3px solid #61a4fb;
+  outline-offset: 2px;
+}
+
+.user-suggestions li {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.user-suggestions li:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+.user-suggestions::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+.user-suggestions::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+.create-badge-container {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  margin-bottom: 20px;
+  max-width: 480px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: all 0.3s ease;
+}
+
+.create-badge-container h3 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #222;
+}
+
+.create-badge-container input[type="text"] {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  background: rgba(255, 255, 255, 0.6);
+  transition: border 0.2s;
+}
+
+.create-badge-container input[type="text"]:focus {
+  border-color: #888;
+}
+
+.create-badge-container button {
+  align-self: flex-start;
+  padding: 8px 16px;
+  border: none;
+  color: rgb(0, 0, 0);
+  width: 100%;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.create-badge-container button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.badge-upload-label {
+  padding: 10px 14px;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.4);
+  color: #333;
+  transition: background 0.2s ease;
+}
+
+.badge-upload-label:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.badge-preview {
+  max-width: 60px;
+  max-height: 60px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

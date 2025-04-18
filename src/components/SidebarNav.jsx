@@ -5,9 +5,10 @@ import { ReactComponent as ProfileIcon } from "./icons/profile.svg";
 import { ReactComponent as ScheduleIcon } from "./icons/schedule.svg";
 import { ReactComponent as DiaryIcon } from "./icons/diary.svg";
 import { ReactComponent as BellIcon } from "./icons/bell.svg";
-
+import TooltipWrapper from "./TooltipWrapper";
 import { BookMarked, LogOut, Newspaper, LayoutDashboard } from "lucide-react";
 import "./styles/SidebarNav.css";
+import "./styles/TooltipWrapper.css";
 
 const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
   const location = useLocation();
@@ -43,7 +44,7 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
       label: "Профиль",
       icon: <ProfileIcon />,
     },
-    { path: "/news", label: "главная", icon: <Newspaper color="black" /> },
+    { path: "/news", label: "Главная", icon: <Newspaper color="black" /> },
     {
       path: "/homework",
       label: "ДЗ",
@@ -53,7 +54,7 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
     { path: "/grades", label: "Журнал", icon: <DiaryIcon /> },
   ];
 
-  const navItemsMain = [{ path: "news", label: "главная", icon: <BellIcon /> }];
+  const navItemsMain = [{ path: "news", label: "Главная", icon: <BellIcon /> }];
 
   const adminItems = [
     {
@@ -74,15 +75,16 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
       {hasNewNews && (
         <div className={`sidebar-nav-message ${expanded ? "none" : ""}`}>
           {navItemsMain.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`sidebar-nav__item ${
-                location.pathname === item.path ? "active" : ""
-              }`}
-            >
-              <span className="sidebar-icon">{item.icon}</span>
-            </Link>
+            <TooltipWrapper key={item.path} label={item.label}>
+              <Link
+                to={item.path}
+                className={`sidebar-nav__item ${
+                  location.pathname === item.path ? "active" : ""
+                }`}
+              >
+                <span className="sidebar-icon">{item.icon}</span>
+              </Link>
+            </TooltipWrapper>
           ))}
         </div>
       )}
@@ -94,15 +96,17 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
           style={{ padding: "15px 0" }}
         >
           {adminItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`sidebar-nav__item ${
-                location.pathname === item.path ? "active" : ""
-              }`}
-            >
-              <span className="sidebar-icon">{item.icon}</span>
-            </Link>
+            <TooltipWrapper key={item.path} label={item.label}>
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`sidebar-nav__item ${
+                  location.pathname === item.path ? "active" : ""
+                }`}
+              >
+                <span className="sidebar-icon">{item.icon}</span>
+              </Link>
+            </TooltipWrapper>
           ))}
         </div>
       )}
@@ -112,15 +116,17 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
         {!showConfirm ? (
           <>
             {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`sidebar-nav__item ${
-                  location.pathname === item.path ? "active" : ""
-                }`}
-              >
-                <div className="sidebar-icon">{item.icon}</div>
-              </Link>
+              <TooltipWrapper key={item.path} label={item.label}>
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`sidebar-nav__item ${
+                    location.pathname === item.path ? "active" : ""
+                  }`}
+                >
+                  <div className="sidebar-icon">{item.icon}</div>
+                </Link>
+              </TooltipWrapper>
             ))}
 
             {/* кнопка выхода */}

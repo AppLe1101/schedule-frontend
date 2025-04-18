@@ -120,6 +120,17 @@ function App() {
         <main>
           <Routes>
             <Route
+              path="/"
+              element={
+                token ? (
+                  <MainPage token={token} user={user} apiUrl={apiUrl} />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            <Route
               path="/login"
               element={
                 token && user ? (

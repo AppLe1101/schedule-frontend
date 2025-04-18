@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import GradesByStudent from "./GradesByStudent";
+import GradesBySubject from "./GradesBySubject";
 import "./styles/Grades.css";
 
 const Grades = ({ user, token, apiUrl }) => {
@@ -9,7 +10,10 @@ const Grades = ({ user, token, apiUrl }) => {
   const [selectedGroup, setSelectedGroup] = useState(null);
   //const [students, setStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
-
+  const [subjects, setSubjects] = useState({});
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [newSubjectName, setNewSubjectName] = useState("");
+  const [showSubjectInputFor, setShowSubjectInputFor] = useState(null);
   const [editingGroupId, setEditingGroupId] = useState(null);
   const [availableStudents, setAvailableStudents] = useState([]);
   const [availableTeachers, setAvailableTeachers] = useState([]);
@@ -49,27 +53,56 @@ const Grades = ({ user, token, apiUrl }) => {
   const handleGroupClick = async (groupId) => {
     if (selectedGroup === groupId) {
       setSelectedGroup(null);
+      setSelectedSubject(null);
       return;
     }
+
     setSelectedGroup(groupId);
-    if (user.role === "teacher") {
-      try {
-        const res = await axios.get(
-          `${apiUrl}/api/groups/${groupId}/students`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setGroupMembers((prev) => ({
-          ...prev,
-          [groupId]: { students: res.data, teachers: [] },
-        }));
-      } catch (err) {
-        console.error("Ошибка при загрузке учеников группы:", err);
+    setSelectedSubject(null);
+
+    try {
+      const subjectRes = await axios.get(`${apiUrl}/api/subjects/${groupId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setSubjects((prev) => ({
+        ...prev,
+        [groupId]: subjectRes.data,
+      }));
+
+      if (user.role === "director") {
+        fetchGroupMembers(groupId);
+        fetchAvailableUsers();
       }
-    } else if (user.role === "director") {
-      fetchGroupMembers(groupId);
-      fetchAvailableUsers();
+    } catch (err) {
+      console.error("Ошибка при загрузке предметов группы:", err);
+    }
+  };
+
+  const handleCreateSubject = async (groupId) => {
+    if (!newSubjectName.trim()) return;
+
+    try {
+      await axios.post(
+        `${apiUrl}/api/subjects`,
+        {
+          name: newSubjectName,
+          groupId,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const res = await axios.get(`${apiUrl}/api/subjects/${groupId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setSubjects((prev) => ({ ...prev, [groupId]: res.data }));
+      setNewSubjectName("");
+      setShowSubjectInputFor(null);
+    } catch (err) {
+      console.error("Ошибка при создании предмета:", err);
     }
   };
 
@@ -128,6 +161,7 @@ const Grades = ({ user, token, apiUrl }) => {
         user={user}
         token={token}
         apiUrl={apiUrl}
+        subjects={subjects}
       />
     );
   }
@@ -158,80 +192,44 @@ const Grades = ({ user, token, apiUrl }) => {
 
             {selectedGroup === group._id && (
               <div className="group-members">
-                {/* Ученики */}
+                {/* Предметы */}
                 <div className="group-item">
-                  <h4>Ученики</h4>
-                  {members.students.map((student) => (
-                    <div key={student._id} className="member-item">
-                      <span
-                        onClick={() => setSelectedStudent(student)}
-                        style={{ cursor: "pointer" }}
-                      >
-                        👤 {student.username}
-                      </span>
-                      {user.role === "director" && (
-                        <button
-                          onClick={() =>
-                            removeUserFromGroup(
-                              group._id,
-                              student._id,
-                              "student"
-                            )
-                          }
+                  <h4>Предметы</h4>
+                  <div className="subject-items">
+                    {subjects[group._id]?.map((subject) => (
+                      <div key={subject._id} className="subject-item">
+                        <span
+                          onClick={() => setSelectedSubject(subject)}
+                          style={{ cursor: "pointer" }}
                         >
-                          ❌
+                          📚 {subject.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {showSubjectInputFor === group._id ? (
+                    <div style={{ marginTop: "10px" }}>
+                      <input
+                        type="text"
+                        value={newSubjectName}
+                        onChange={(e) => setNewSubjectName(e.target.value)}
+                        placeholder="Название предмета"
+                        style={{ marginBottom: "5px" }}
+                        className="subject-name-input"
+                      />
+                      <div>
+                        <button onClick={() => handleCreateSubject(group._id)}>
+                          Добавить
                         </button>
-                      )}
+                        <button onClick={() => setShowSubjectInputFor(null)}>
+                          Отмена
+                        </button>
+                      </div>
                     </div>
-                  ))}
-
-                  {user.role === "director" && (
-                    <div style={{ display: "flex", gap: "10px" }}>
-                      <select
-                        value={selectedStudentToAdd}
-                        onChange={(e) =>
-                          setSelectedStudentToAdd(e.target.value)
-                        }
-                      >
-                        <option value="">Выбрать ученика</option>
-                        {availableStudents
-                          .filter((s) => !currentStudentIds.includes(s._id))
-                          .map((student) => (
-                            <option key={student._id} value={student._id}>
-                              {student.username}
-                              {Array.isArray(student.groupId) &&
-                              student.groupId.length > 0
-                                ? " (в другой группе)"
-                                : ""}
-                            </option>
-                          ))}
-                      </select>
-
-                      <button
-                        disabled={
-                          !selectedStudentToAdd ||
-                          availableStudents.find(
-                            (s) => s._id === selectedStudentToAdd
-                          )?.groupId?.length > 0
-                        }
-                        onClick={() =>
-                          addUserToGroup(
-                            group._id,
-                            selectedStudentToAdd,
-                            "student"
-                          )
-                        }
-                      >
-                        Добавить ученика
-                      </button>
-                      {availableStudents.find(
-                        (s) => s._id === selectedStudentToAdd
-                      )?.groupId?.length > 0 && (
-                        <p className="warning-text">
-                          Этот ученик уже находится в другой группе.
-                        </p>
-                      )}
-                    </div>
+                  ) : (
+                    <button onClick={() => setShowSubjectInputFor(group._id)}>
+                      ➕ Новый предмет
+                    </button>
                   )}
                 </div>
 
@@ -295,21 +293,24 @@ const Grades = ({ user, token, apiUrl }) => {
               </div>
             )}
 
-            {selectedStudent && selectedGroup === group._id && (
+            {selectedSubject && selectedGroup === group._id && (
               <div style={{ marginTop: "20px" }}>
                 <button
                   onClick={() => {
-                    setSelectedStudent(null);
+                    setSelectedSubject(null);
                   }}
                   className="close-grades-btn"
                 >
-                  Скрыть дневник
+                  Скрыть журнал
                 </button>
-                <GradesByStudent
-                  studentId={selectedStudent._id}
+                <GradesBySubject
+                  subject={selectedSubject}
+                  availableStudents={availableStudents}
+                  fetchGroupMembers={() => fetchGroupMembers()}
+                  groupId={group._id}
                   token={token}
-                  apiUrl={apiUrl}
                   user={user}
+                  apiUrl={apiUrl}
                 />
               </div>
             )}

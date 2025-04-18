@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReportTab from "./ReportsTab";
 import DeleteReqTab from "./DeleteReqTab";
 import UserRegisterTab from "./UserRegisterTab";
+import BadgesTab from "./BadgesTab";
 import axios from "axios";
 import "./styles/Dashboard.css";
 
@@ -22,6 +23,7 @@ const Dashboard = ({ user, apiUrl, token }) => {
           <button onClick={() => setActiveTab("register")}>
             Регистрация пользователя
           </button>
+          <button onClick={() => setActiveTab("give-badge")}>Значки</button>
         </div>
 
         {/* ABOUT ADMIN PANEL */}
@@ -36,6 +38,9 @@ const Dashboard = ({ user, apiUrl, token }) => {
         )}
         {activeTab === "register" && (
           <UserRegisterTab apiUrl={apiUrl} token={token} user={user} />
+        )}
+        {activeTab === "give-badge" && (
+          <BadgesTab apiUrl={apiUrl} user={user} token={token} />
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import Loading from "./Loading";
 //import DefaultAvatar from "./icons/default-avatar.png";
 import { toast } from "react-toastify";
@@ -9,6 +9,7 @@ import ReportModal from "./ReportModal";
 import CommentSection from "./CommentSection";
 import TiptapEditor from "./TiptapEditor";
 import DescriptionRenderer from "./DescriptionRenderer";
+import DetailedProfileView from "./DetailedProfileView";
 import "./styles/Profile.css";
 
 const Profile = ({ user, token, apiUrl }) => {
@@ -27,6 +28,8 @@ const Profile = ({ user, token, apiUrl }) => {
   const navigate = useNavigate();
   const isSelf = user?._id === id;
   const ownedBadges = allBadges.filter((b) => profile.badges?.includes(b._id));
+  const location = useLocation();
+  const tab = new URLSearchParams(location.search).get("tab") || "profile";
 
   useEffect(() => {
     setLoading(true);
@@ -76,6 +79,22 @@ const Profile = ({ user, token, apiUrl }) => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setAllBadges(badgesRes.data);
+
+        if (res.data.role === "student" && res.data.groupId) {
+          const detailsRes = await axios.get(
+            `${apiUrl}/api/groups/${res.data.groupId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          setProfile((prev) => ({
+            ...prev,
+            direction: detailsRes.data.direction,
+            course: detailsRes.data.course,
+            groupName: detailsRes.data.name,
+            curator: detailsRes.data.curator,
+          }));
+        }
       } catch (err) {
         console.error("Ошибка при загрузке профиля:", err);
       } finally {
@@ -98,6 +117,12 @@ const Profile = ({ user, token, apiUrl }) => {
       setNewDescription(profile.description);
     }
   }, [profile?.description]);
+
+  useEffect(() => {
+    if (!isSelf && tab === "details") {
+      navigate(`/profile/${id}?tab=profile`);
+    }
+  }, [isSelf, tab, navigate, id]);
 
   const handleAvatarClick = () => {
     fileInputRef.current.click();
@@ -211,257 +236,301 @@ const Profile = ({ user, token, apiUrl }) => {
   if (!profile)
     return <div className="profile-not-found">Профиль не найден</div>;
 
+  {
+    tab === "details" ? (
+      <DetailedProfileView profile={profile} groupName={groupName} />
+    ) : (
+      <></>
+    );
+  }
   return (
     <div className="user-profile">
       <button onClick={() => navigate(-1)} className="back-button">
         ← Назад
       </button>
-      <div className="profile-card">
-        <div className="profile-avatar">
-          {isSelf ? (
-            <div>
-              <img
-                src={
-                  avatarUrl ||
-                  "https://res.cloudinary.com/dbw9zoxts/image/upload/v1743674361/avatars/nufw7lvuhkqy9jgjorbv.png"
-                }
-                alt="Аватар профиля"
-                onClick={handleAvatarClick}
-                className="avatar-img self"
-                style={{ cursor: "pointer" }}
-              />
-              <input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                onChange={handleAvatarChange}
-                style={{ display: "none" }}
-              />
-            </div>
-          ) : (
-            <img
-              src={
-                profile.avatar ||
-                "https://res.cloudinary.com/dbw9zoxts/image/upload/v1743674361/avatars/nufw7lvuhkqy9jgjorbv.png"
-              }
-              alt="Аватар профиля"
-              className="avatar-img"
-            />
-          )}
+      {isSelf && (
+        <div className="profile-tabs">
+          <button
+            className={`profile-tab-button ${
+              tab === "profile" ? "active" : ""
+            }`}
+            onClick={() => navigate(`/profile/${id}?tab=profile`)}
+          >
+            Профиль
+          </button>
+          <button
+            className={`details-tab-button ${
+              tab === "details" ? "active" : ""
+            }`}
+            onClick={() => navigate(`/profile/${id}?tab=details`)}
+          >
+            Подробно
+          </button>
         </div>
-        <div className="profile-info">
-          <div className="profile-name">
-            {profile.username}{" "}
-            {profile._id === "67ab1aa0af53f6eca8443d6e" && (
-              <BadgeCheck
-                color="#faa307"
-                height={"20px"}
-                style={{ transform: "translateY(5px)" }}
-              />
-            )}
-            {isSelf && <span className="self-label">(вы)</span>}{" "}
-          </div>
-          <div className="badge-list-profile">
-            {(profile.visibleBadges?.length > 0 || isSelf) && (
-              <div className="profile-badges">
-                {profile.visibleBadges
-                  ?.map((id) => allBadges.find((b) => b._id === id))
-                  .filter(Boolean)
-                  .map((badge) => (
-                    <div
-                      key={badge._id}
-                      className="profile-badge"
-                      title={badge.name}
-                    >
-                      <img src={badge.icon} alt={badge.name} />
-                    </div>
-                  ))}
-                {isSelf && (
-                  <div
-                    className="profile-badge add-badge"
-                    onClick={() => setShowBadgePicker(true)}
-                    title="Выбрать значки"
-                  >
-                    <Plus color="gray" />
+      )}
+      {tab === "details" ? (
+        <DetailedProfileView profile={profile} groupName={groupName} />
+      ) : (
+        <>
+          <div className="profile-card">
+            <div className="profile-avatar">
+              {isSelf ? (
+                <div>
+                  <img
+                    src={
+                      avatarUrl ||
+                      "https://res.cloudinary.com/dbw9zoxts/image/upload/v1743674361/avatars/nufw7lvuhkqy9jgjorbv.png"
+                    }
+                    alt="Аватар профиля"
+                    onClick={handleAvatarClick}
+                    className="avatar-img self"
+                    style={{ cursor: "pointer" }}
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    onChange={handleAvatarChange}
+                    style={{ display: "none" }}
+                  />
+                </div>
+              ) : (
+                <img
+                  src={
+                    profile.avatar ||
+                    "https://res.cloudinary.com/dbw9zoxts/image/upload/v1743674361/avatars/nufw7lvuhkqy9jgjorbv.png"
+                  }
+                  alt="Аватар профиля"
+                  className="avatar-img"
+                />
+              )}
+            </div>
+            <div className="profile-info">
+              <div className="profile-name">
+                {profile.username}{" "}
+                {profile._id === "67ab1aa0af53f6eca8443d6e" && (
+                  <BadgeCheck
+                    color="#faa307"
+                    height={"20px"}
+                    style={{ transform: "translateY(5px)" }}
+                  />
+                )}
+                {isSelf && <span className="self-label">(вы)</span>}{" "}
+              </div>
+              <div className="badge-list-profile">
+                {(profile.visibleBadges?.length > 0 || isSelf) && (
+                  <div className="profile-badges">
+                    {profile.visibleBadges
+                      ?.map((id) => allBadges.find((b) => b._id === id))
+                      .filter(Boolean)
+                      .map((badge) => (
+                        <div
+                          key={badge._id}
+                          className="profile-badge"
+                          title={badge.name}
+                        >
+                          <img src={badge.icon} alt={badge.name} />
+                        </div>
+                      ))}
+                    {isSelf && (
+                      <div
+                        className="profile-badge add-badge"
+                        onClick={() => setShowBadgePicker(true)}
+                        title="Выбрать значки"
+                      >
+                        <Plus color="gray" />
+                      </div>
+                    )}
+                    {showBadgePicker && (
+                      <div className="badge-picker">
+                        <h4>Выберите до 5 значков</h4>
+                        <div className="badge-options">
+                          {ownedBadges.map((badge) => {
+                            const isSelected = profile.visibleBadges?.includes(
+                              badge._id
+                            );
+                            return (
+                              <div
+                                key={badge._id}
+                                className={`badge-option ${
+                                  isSelected ? "selected" : ""
+                                }`}
+                                onClick={() => toggleBadge(badge)}
+                              >
+                                <img src={badge.icon} alt={badge.name} />
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className="badge-picker-button-container">
+                          <button onClick={saveVisibleBadges}>
+                            💾 Сохранить
+                          </button>
+                          <button onClick={() => setShowBadgePicker(false)}>
+                            ✖ Закрыть
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
-                {showBadgePicker && (
-                  <div className="badge-picker">
-                    <h4>Выберите до 5 значков</h4>
-                    <div className="badge-options">
-                      {ownedBadges.map((badge) => {
-                        const isSelected = profile.visibleBadges?.includes(
-                          badge._id
-                        );
+              </div>
+              <p>
+                <small>
+                  <strong>ID:</strong> {profile._id}
+                </small>
+              </p>
+              <p>
+                <strong>Статус:</strong>{" "}
+                {profile.role === "student"
+                  ? "Ученик"
+                  : profile.role === "teacher"
+                  ? "Преподаватель"
+                  : "Директор"}
+              </p>
+              {profile.role === "student" && (
+                <p>
+                  <strong>Группа:</strong> {groupName || "—"}
+                </p>
+              )}
+              <div className="profile-rating">
+                <p>Рейтинг:</p>
+                {profile._id !== "67ab1aa0af53f6eca8443d6e" ? (
+                  profile.role === "student" ? (
+                    <div
+                      className="stars"
+                      style={{ transform: "translateY(3px)" }}
+                    >
+                      {[...Array(5)].map((_, i) => {
+                        const full = i + 1 <= rating;
+                        const half = i + 0.5 === rating;
+
                         return (
-                          <div
-                            key={badge._id}
-                            className={`badge-option ${
-                              isSelected ? "selected" : ""
-                            }`}
-                            onClick={() => toggleBadge(badge)}
-                          >
-                            <img src={badge.icon} alt={badge.name} />
-                          </div>
+                          <span key={i}>
+                            {full ? (
+                              <Star
+                                className="text-yellow-400 w-5 h-5"
+                                color="#faa307"
+                                fill="#ffba08"
+                              />
+                            ) : half ? (
+                              <Star
+                                className="text-yellow-400 w-5 h-5 opacity-50"
+                                color="#faa307"
+                                fill="#ffba08"
+                                opacity="50%"
+                              />
+                            ) : (
+                              <Star
+                                className="text-gray-300 w-5 h-5"
+                                color="gray"
+                              />
+                            )}
+                          </span>
                         );
                       })}
                     </div>
-                    <div className="badge-picker-button-container">
-                      <button onClick={saveVisibleBadges}>💾 Сохранить</button>
-                      <button onClick={() => setShowBadgePicker(false)}>
-                        ✖ Закрыть
-                      </button>
+                  ) : (
+                    <div
+                      className="stars"
+                      style={{ transform: "translateY(3px)" }}
+                    >
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i}>
+                          <Star color="#00b4d8" fill="#48cae4" />
+                        </span>
+                      ))}
                     </div>
+                  )
+                ) : (
+                  <div
+                    className="stars"
+                    style={{ transform: "translateY(3px)" }}
+                  >
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i}>
+                        <Star color="#c9184a" fill="#ff4d6d" />
+                      </span>
+                    ))}
                   </div>
                 )}
               </div>
-            )}
+              {isSelf && (
+                <Link
+                  to={`/profile/${user._id}/settings`}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Settings />
+                </Link>
+              )}
+              {!isSelf && (
+                <button onClick={() => setIsReportOpen(true)}>Репорт</button>
+              )}
+            </div>
           </div>
-          <p>
-            <small>
-              <strong>ID:</strong> {profile._id}
-            </small>
-          </p>
-          <p>
-            <strong>Статус:</strong>{" "}
-            {profile.role === "student"
-              ? "Ученик"
-              : profile.role === "teacher"
-              ? "Преподаватель"
-              : "Директор"}
-          </p>
-          {profile.role === "student" && (
-            <p>
-              <strong>Группа:</strong> {groupName || "—"}
-            </p>
+          {isReportOpen && (
+            <ReportModal
+              isOpen={isReportOpen}
+              onClose={() => setIsReportOpen(false)}
+              onSubmit={handleReportSend}
+              targetId={profile._id}
+            />
           )}
-          <div className="profile-rating">
-            <p>Рейтинг:</p>
-            {profile._id !== "67ab1aa0af53f6eca8443d6e" ? (
-              profile.role === "student" ? (
-                <div className="stars" style={{ transform: "translateY(3px)" }}>
-                  {[...Array(5)].map((_, i) => {
-                    const full = i + 1 <= rating;
-                    const half = i + 0.5 === rating;
-
-                    return (
-                      <span key={i}>
-                        {full ? (
-                          <Star
-                            className="text-yellow-400 w-5 h-5"
-                            color="#faa307"
-                            fill="#ffba08"
-                          />
-                        ) : half ? (
-                          <Star
-                            className="text-yellow-400 w-5 h-5 opacity-50"
-                            color="#faa307"
-                            fill="#ffba08"
-                            opacity="50%"
-                          />
-                        ) : (
-                          <Star
-                            className="text-gray-300 w-5 h-5"
-                            color="gray"
-                          />
-                        )}
-                      </span>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="stars" style={{ transform: "translateY(3px)" }}>
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i}>
-                      <Star color="#00b4d8" fill="#48cae4" />
-                    </span>
-                  ))}
-                </div>
-              )
-            ) : (
-              <div className="stars" style={{ transform: "translateY(3px)" }}>
-                {[...Array(5)].map((_, i) => (
-                  <span key={i}>
-                    <Star color="#c9184a" fill="#ff4d6d" />
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-          {isSelf && (
-            <Link
-              to={`/profile/${user._id}/settings`}
-              style={{
-                textDecoration: "none",
-                color: "black",
-                cursor: "pointer",
-              }}
-            >
-              <Settings />
-            </Link>
-          )}
-          {!isSelf && (
-            <button onClick={() => setIsReportOpen(true)}>Репорт</button>
-          )}
-        </div>
-      </div>
-      {isReportOpen && (
-        <ReportModal
-          isOpen={isReportOpen}
-          onClose={() => setIsReportOpen(false)}
-          onSubmit={handleReportSend}
-          targetId={profile._id}
-        />
-      )}
-      <div className="description-container">
-        <div className="description-header">
-          <h3>О себе</h3>
-          {isSelf && !editingDescription && (
-            <button
-              onClick={() => setEditingDescription(true)}
-              className="description-edit-button"
-              title="Редактировать описание"
-            >
-              <PencilLine height={"20px"} width={"20px"} />
-            </button>
-          )}
-        </div>
-
-        {editingDescription ? (
-          isSelf && (
-            <>
-              <TiptapEditor
-                apiUrl={apiUrl}
-                token={token}
-                initialContent={profile.description}
-                onChange={(html) => setNewDescription(html)}
-              />
-              <div className="desc-buttons">
-                <button onClick={saveDescription}>💾 Сохранить</button>
-                <button onClick={() => setEditingDescription(false)}>
-                  ✖ Отмена
+          <div className="description-container">
+            <div className="description-header">
+              <h3>О себе</h3>
+              {isSelf && !editingDescription && (
+                <button
+                  onClick={() => setEditingDescription(true)}
+                  className="description-edit-button"
+                  title="Редактировать описание"
+                >
+                  <PencilLine height={"20px"} width={"20px"} />
                 </button>
-              </div>
-            </>
-          )
-        ) : profile.description ? (
-          <div className="profile-description">
-            <DescriptionRenderer content={profile.description} />
-          </div>
-        ) : (
-          <div className="no-description">
-            {isSelf ? "Описание не добавлено." : "Описание отсутствует."}
-          </div>
-        )}
-      </div>
+              )}
+            </div>
 
-      {profile._id === "67ab1aa0af53f6eca8443d6e" && (
-        <CommentSection
-          apiUrl={apiUrl}
-          token={token}
-          targetUserId={profile._id}
-          currentUser={user}
-        />
+            {editingDescription ? (
+              isSelf && (
+                <>
+                  <TiptapEditor
+                    apiUrl={apiUrl}
+                    token={token}
+                    initialContent={profile.description}
+                    onChange={(html) => setNewDescription(html)}
+                  />
+                  <div className="desc-buttons">
+                    <button onClick={saveDescription}>💾 Сохранить</button>
+                    <button onClick={() => setEditingDescription(false)}>
+                      ✖ Отмена
+                    </button>
+                  </div>
+                </>
+              )
+            ) : profile.description ? (
+              <div className="profile-description">
+                <DescriptionRenderer content={profile.description} />
+              </div>
+            ) : (
+              <div className="no-description">
+                {isSelf ? "Описание не добавлено." : "Описание отсутствует."}
+              </div>
+            )}
+          </div>
+
+          {profile.allowComments && (
+            <CommentSection
+              apiUrl={apiUrl}
+              token={token}
+              targetUserId={profile._id}
+              currentUser={user}
+            />
+          )}
+        </>
       )}
     </div>
   );

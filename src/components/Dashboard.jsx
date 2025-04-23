@@ -3,6 +3,7 @@ import ReportTab from "./ReportsTab";
 import DeleteReqTab from "./DeleteReqTab";
 import UserRegisterTab from "./UserRegisterTab";
 import BadgesTab from "./BadgesTab";
+import GroupsTab from "./GroupsTab";
 import axios from "axios";
 import "./styles/Dashboard.css";
 
@@ -23,11 +24,12 @@ const Dashboard = ({ user, apiUrl, token }) => {
           <button onClick={() => setActiveTab("register")}>
             Регистрация пользователя
           </button>
+          <button onClick={() => setActiveTab("groups")}>Группы</button>
           <button onClick={() => setActiveTab("give-badge")}>Значки</button>
         </div>
 
         {/* ABOUT ADMIN PANEL */}
-        <div className="ap-info">v1.1.0</div>
+        <div className="ap-info">v1.3.0</div>
       </div>
 
       {/* MAIN CONTENT */}
@@ -41,6 +43,9 @@ const Dashboard = ({ user, apiUrl, token }) => {
         )}
         {activeTab === "give-badge" && (
           <BadgesTab apiUrl={apiUrl} user={user} token={token} />
+        )}
+        {activeTab === "groups" && (
+          <GroupsTab apiUrl={apiUrl} token={token} user={user} />
         )}
       </div>
     </div>

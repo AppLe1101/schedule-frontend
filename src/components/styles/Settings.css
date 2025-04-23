@@ -1,0 +1,109 @@
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.comments-toggle-setting {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+  padding: 10px;
+  border-radius: 16px;
+  background-color: #f0f0f0;
+  animation: fadeIn 0.3s ease;
+}
+.switch {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  gap: 12px;
+  user-select: none;
+}
+
+.switch input {
+  display: none;
+}
+
+.switch .slider {
+  position: relative;
+  width: 46px;
+  height: 24px;
+  background-color: #ccc;
+  border-radius: 24px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.switch .slider::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Когда активен */
+.switch input:checked + .slider {
+  background-color: #4caf50;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+.switch .switch-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.account-deletion {
+  display: flex;
+  gap: 15px;
+}
+
+.account-deletion button {
+  background: rgba(255, 10, 10, 0.6);
+  color: aliceblue;
+}
+.account-deletion button:hover {
+  background: rgba(255, 10, 10, 0.8);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.contact-field {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-field label {
+  min-width: 100px;
+  font-weight: 500;
+}
+
+.contact-field span {
+  color: #333;
+}
+
+.contact-field input {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: none;
+  outline: none !important;
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #000;
+  resize: none;
+  font-size: 14px;
+}

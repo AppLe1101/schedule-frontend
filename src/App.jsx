@@ -17,6 +17,8 @@ import HomeworkPage from "./components/HomeworkPage";
 import Settings from "./components/Settings";
 import Dashboard from "./components/Dashboard";
 import HomeworkItemPage from "./components/HomeworkItemPage";
+import TermsAndPolicy from "./components/TermsAndPolicy";
+import Footer from "./components/Footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./components/utils/axiosSetup";
@@ -256,8 +258,13 @@ function App() {
                 )
               }
             />
+
+            <Route path="/policy" element={<TermsAndPolicy />} />
           </Routes>
         </main>
+        <footer style={{ position: "fixed", bottom: "0", width: "100%" }}>
+          <Footer />
+        </footer>
       </div>
       <ToastContainer />
     </>

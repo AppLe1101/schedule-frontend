@@ -38,6 +38,7 @@
   gap: 30px;
   padding: 20px;
   border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(25px) saturate(180%);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
@@ -215,6 +216,114 @@
   border-radius: 20px;
   padding: 10px;
   border: 1px solid #ccc;
+}
+
+.profile-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(25px) saturate(180%);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.profile-tabs button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.profile-tab-button {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.details-tab-button {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.profile-tabs button.active {
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.7);
+  color: rgb(0, 0, 0);
+}
+
+.profile-details-tab {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(25px) saturate(180%);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 30px;
+  margin-top: 20px;
+  max-width: 600px;
+  margin-inline: auto;
+  width: 350px;
+}
+
+.profile-details-tab p {
+  font-size: 16px;
+  margin: 8px 0;
+  color: #333;
+}
+
+.profile-details-tab strong {
+  margin-left: 5px;
+}
+
+.details-learning {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  max-width: 400px;
+  gap: 0;
+}
+
+.curator-card h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.curator-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.curator-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 20px;
+  object-fit: cover;
+  border: 2px solid #ccc;
+}
+
+.curator-container-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 6px 0;
+  gap: 2px;
+  font-size: 15px;
+}
+
+.curator-container-right p,
+a {
+  margin: 0;
+  color: #444;
 }
 
 @media (max-width: 768px) {

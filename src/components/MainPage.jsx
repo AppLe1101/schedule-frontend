@@ -215,6 +215,7 @@ const MainPage = ({ user, token, apiUrl }) => {
                         onChange={(e) =>
                           setEditForm({ ...editForm, image: e.target.value })
                         }
+                        style={{ display: "none" }}
                       />
                       <div className="edit-btns">
                         <button onClick={submitEdit}>💾 Сохранить</button>
@@ -237,17 +238,19 @@ const MainPage = ({ user, token, apiUrl }) => {
                       </small>
                     </div>
                   )}
-                  {isAuthorized && (
-                    <button onClick={() => handleDelete(item._id)}>
-                      Удалить
-                    </button>
-                  )}
-                  {user.role === "director" ||
-                  user.username === item.author?.username ? (
-                    <button onClick={() => startEdit(item)}>
-                      Редактировать
-                    </button>
-                  ) : null}
+                  <div className="news-control-buttons">
+                    {isAuthorized && (
+                      <button onClick={() => handleDelete(item._id)}>
+                        Удалить
+                      </button>
+                    )}
+                    {user.role === "director" ||
+                    user.username === item.author?.username ? (
+                      <button onClick={() => startEdit(item)}>
+                        Редактировать
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
               </React.Fragment>
             );

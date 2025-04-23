@@ -20,6 +20,7 @@ const getWeekDates = (startDate) => {
 };
 
 const HomeworkCalendar = ({ token, apiUrl, user }) => {
+  const [loading, setLoading] = useState(true);
   const groupId = Array.isArray(user.groupId)
     ? user.groupId[0]?.toString()
     : user.groupId;
@@ -43,6 +44,8 @@ const HomeworkCalendar = ({ token, apiUrl, user }) => {
       setHomework(res.data);
     } catch (err) {
       console.error("Ошибка при загрузке дз:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,6 +75,7 @@ const HomeworkCalendar = ({ token, apiUrl, user }) => {
           Неделя с {weekDates[0].toLocaleDateString()} по{" "}
           {weekDates[5].toLocaleDateString()}
         </span>
+        {loading && <p className="loading-hw">Обновление...</p>}
         <button onClick={handleNextWeek}>Вперед →</button>
       </div>
 

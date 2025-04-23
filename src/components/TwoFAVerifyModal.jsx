@@ -77,6 +77,27 @@ const TwoFAVerifyModal = forwardRef(
       }
     };
 
+    const handlePaste = (e) => {
+      const paste = e.clipboardData.getData("text").trim();
+      if (/^\d{6}$/.test(paste)) {
+        const digits = paste.split("");
+
+        digits.forEach((digit, index) => {
+          if (inputs.current[index]) {
+            inputs.current[index].value = digit;
+          }
+        });
+
+        setCode(digits);
+
+        setTimeout(() => {
+          handleSubmit(digits.join(""));
+        }, 100);
+
+        e.preventDefault();
+      }
+    };
+
     return (
       <div className="twofa-modal" ref={ref}>
         <div className="twofa-content">
@@ -97,7 +118,7 @@ const TwoFAVerifyModal = forwardRef(
           <small style={{ color: "gray" }}>
             Google Auth, Apple Password, ect...
           </small>
-          <div className="twofa-inputs">
+          <div className="twofa-inputs" onPaste={handlePaste}>
             {code.map((digit, index) => (
               <input
                 type="tel"

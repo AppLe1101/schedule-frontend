@@ -220,7 +220,7 @@ const GradesBySubject = ({
       </div>
 
       <div className="grades-table-wrapper">
-        <table className="grades-table" style={{ display: "contents" }}>
+        <table className="grades-table">
           <thead>
             <tr>
               <th className="fixed-column">Ученик</th>

@@ -132,6 +132,7 @@
   background-color: rgba(255, 255, 255, 0.25);
   color: #000;
   font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 .tiptap.ProseMirror p {
   margin: 2px;
@@ -198,4 +199,9 @@
   border: none;
   border-radius: 10px;
   background-color: #555;
+}
+
+.news-control-buttons {
+  display: flex;
+  gap: 10px;
 }

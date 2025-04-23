@@ -6,6 +6,7 @@ import Loading from "./Loading";
 import TwoFAVerifyModal from "./TwoFAVerifyModal";
 import PasswordConfirmModal from "./PasswordConfirmModal";
 import DelReqModal from "./DelReqModal";
+import "./styles/Settings.css";
 
 const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
   const { id } = useParams();
@@ -20,6 +21,11 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
   const [error, setError] = useState("");
   const [showDisableModal, setShowDisableModal] = useState(false);
   const [showEnableModal, setShowEnableModal] = useState(false);
+  const [allowComments, setAllowComments] = useState(false);
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [editingEmail, setEditingEmail] = useState(false);
+  const [editingPhone, setEditingPhone] = useState(false);
   const [showAccountDeletionModal, setShowAccountDeletionModal] =
     useState(false);
   const navigate = useNavigate();
@@ -31,6 +37,9 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setTwoFAEnabled(res.data.twoFAEnabled);
+        setAllowComments(res.data.allowComments);
+        setEmail(res.data.email || "");
+        setPhone(res.data.phone || "");
       } catch (err) {
         console.error("Ошибка при получении настроек:", err);
       } finally {
@@ -66,33 +75,6 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
     }
   };
 
-  const verifyTwoFA = async () => {
-    setVerifying(true);
-    setError("");
-    const userId = user._id || user.userId;
-    try {
-      const res = await axios.post(`${apiUrl}/api/verify-2fa`, {
-        userId,
-        token: code,
-        mode: "verify-only",
-      });
-
-      if (res.data.success) {
-        setTwoFAEnabled(true);
-        setQRCodeUrl(null);
-        setCode("");
-        alert("2FA успешно включена");
-      } else {
-        setError("Неверный код 2FA");
-      }
-    } catch (err) {
-      console.error("Ошибка при проверке 2FA:", err);
-      alert("Неверный код 2FA");
-    } finally {
-      setVerifying(false);
-    }
-  };
-
   const disable2FA = async () => {
     try {
       await axios.post(
@@ -104,6 +86,26 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
     } catch (err) {
       console.error("Ошибка при отключении 2FA:", err);
       setError("Не удалось отключить 2FA");
+    }
+  };
+
+  const handleContactSave = async (field) => {
+    try {
+      await axios.put(
+        `${apiUrl}/api/users/${user._id}/update-contacts`,
+        {
+          email: field === "email" ? email : user.email,
+          phone: field === "phone" ? phone : user.phone,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success("Контактные данные обновлены");
+
+      if (field === "email") setEditingEmail(false);
+      if (field === "phone") setEditingPhone(false);
+    } catch (err) {
+      toast.error("Ошибка при сохранении контактов");
+      console.log("Ошибка при сохранении контактов", err);
     }
   };
 
@@ -136,13 +138,67 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
     );
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px" }} className="settings-container">
       <h2>Настройки</h2>
 
       <button onClick={() => navigate(-1)} className="back-button">
         ← Назад
       </button>
 
+      {/* НАСТРОЙКИ ПРОФИЛЯ */}
+      <div className="contacts-settings">
+        <h3>Контактные данные</h3>
+
+        <div className="contact-field">
+          <label>Email:</label>
+          {editingEmail ? (
+            <>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={user.email || "example@example.com"}
+              />
+              <button onClick={() => handleContactSave("email")}>
+                💾 Сохранить
+              </button>
+            </>
+          ) : (
+            <>
+              <span>{email || "Не указано"}</span>
+              <button onClick={() => setEditingEmail(true)}>
+                ✏ Редактировать
+              </button>
+            </>
+          )}
+        </div>
+
+        <div className="contact-field">
+          <label>Телефон:</label>
+          {editingPhone ? (
+            <>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder={user.phone || "+7 (XXX) XXX-XX-XX"}
+              />
+              <button onClick={() => handleContactSave("phone")}>
+                💾 Сохранить
+              </button>
+            </>
+          ) : (
+            <>
+              <span>{phone || "Не указано"}</span>
+              <button onClick={() => setEditingPhone(true)}>
+                ✏ Редактировать
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* НАСТРОЙКА ДВУХФАКТОРКИ */}
       <div style={{ marginTop: "20px" }}>
         <h4>Двухфакторная аутентификация (2FA)</h4>
 
@@ -164,14 +220,48 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
         {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
 
-      <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-        <option value="default-light">Светлая</option>
-        <option value="default-dark">Темная</option>
-        <option value="default-ultra-dark">Ночь</option>
-      </select>
+      <div className="theme-toggle-setting">
+        <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+          <option value="default-light">Светлая</option>
+          <option value="default-dark">Темная</option>
+          <option value="default-ultra-dark">Ночь</option>
+        </select>
+      </div>
+
+      <div className="comments-toggle-setting">
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={allowComments}
+            onChange={async (e) => {
+              const newVal = e.target.checked;
+              setAllowComments(newVal);
+              try {
+                await axios.put(
+                  `${apiUrl}/api/users/${user._id}/update-comments-setting`,
+                  {
+                    allowComments: newVal,
+                  },
+                  {
+                    headers: { Authorization: `Bearer ${token}` },
+                  }
+                );
+              } catch (err) {
+                console.error(
+                  "Ошибка при обновлении настроек комментариев:",
+                  err
+                );
+              }
+            }}
+          />
+          <span className="slider"></span>
+          <span className="switch-label">
+            Разрешить другим оставлять комментарии
+          </span>
+        </label>
+      </div>
 
       <div className="account-deletion">
-        <p>Удалить аккаунт</p>
         <button onClick={handleDeleteClick}>Удалить Аккаунт</button>
       </div>
 

@@ -1,0 +1,112 @@
+.student-gradebook-table {
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  padding: 20px 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  margin-top: 30px;
+  overflow-x: auto;
+}
+
+.student-gradebook-table h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #000000;
+}
+
+.gradebook-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.gradebook-table thead {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #dbeafe;
+}
+
+.gradebook-table th,
+.gradebook-table td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+}
+
+.gradebook-teacher-link {
+  padding: 2px 6px;
+  margin: 0 2px;
+  font-weight: 500;
+  font-size: 0.95em;
+  color: #000;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px) saturate(160%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s;
+  animation: userHoverAnim 3s ease-in-out infinite;
+  user-select: none;
+}
+
+.gradebook-teacher-link:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.gradebook-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.gradebook-table td:nth-child(6) {
+  font-weight: 600;
+}
+
+.gradebook-table td:nth-child(6):not(:empty)::after {
+  content: "";
+  display: inline-block;
+  margin-left: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: currentColor;
+  opacity: 0.6;
+}
+
+.grade-pass {
+  color: #4ade80; /* зелёный */
+  font-weight: 600;
+}
+
+.grade-fail {
+  color: #f87171; /* красный */
+  font-weight: 600;
+}
+
+.grade-5 {
+  color: #4ade80; /* зелёный */
+  font-weight: 600;
+}
+
+.grade-4 {
+  color: #ffb100; /* жёлтый */
+  font-weight: 600;
+}
+
+.grade-3 {
+  color: #f97316; /* оранжевый */
+  font-weight: 600;
+}
+
+.grade-2 {
+  color: #ef4444; /* красный */
+  font-weight: 600;
+}

@@ -3,21 +3,24 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import GradesByStudent from "./GradesByStudent";
 import GradesBySubject from "./GradesBySubject";
+import GradebookBySubject from "./GradebookBySubject";
+import GradebookByStudent from "./GradebookByStudent";
 import "./styles/Grades.css";
 
 const Grades = ({ user, token, apiUrl }) => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   //const [students, setStudents] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  //const [selectedStudent, setSelectedStudent] = useState(null);
   const [subjects, setSubjects] = useState({});
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [newSubjectName, setNewSubjectName] = useState("");
   const [showSubjectInputFor, setShowSubjectInputFor] = useState(null);
-  const [editingGroupId, setEditingGroupId] = useState(null);
+  //const [editingGroupId, setEditingGroupId] = useState(null);
   const [availableStudents, setAvailableStudents] = useState([]);
   const [availableTeachers, setAvailableTeachers] = useState([]);
-  const [selectedStudentToAdd, setSelectedStudentToAdd] = useState("");
+  //const [selectedStudentToAdd, setSelectedStudentToAdd] = useState("");
+  const [activeTab, setActiveTab] = useState("grades");
   const [selectedTeacherToAdd, setSelectedTeacherToAdd] = useState("");
   const [groupMembers, setGroupMembers] = useState({});
 
@@ -156,13 +159,20 @@ const Grades = ({ user, token, apiUrl }) => {
 
   if (user.role === "student") {
     return (
-      <GradesByStudent
-        studentId={user._id}
-        user={user}
-        token={token}
-        apiUrl={apiUrl}
-        subjects={subjects}
-      />
+      <>
+        <GradesByStudent
+          studentId={user._id}
+          user={user}
+          token={token}
+          apiUrl={apiUrl}
+          subjects={subjects}
+        />
+        <GradebookByStudent
+          studentId={user._id}
+          apiUrl={apiUrl}
+          token={token}
+        />
+      </>
     );
   }
 
@@ -174,7 +184,6 @@ const Grades = ({ user, token, apiUrl }) => {
           students: [],
           teachers: [],
         };
-        const currentStudentIds = members.students.map((s) => s._id);
         const currentTeacherIds = members.teachers.map((t) => t._id);
 
         return (
@@ -294,7 +303,14 @@ const Grades = ({ user, token, apiUrl }) => {
             )}
 
             {selectedSubject && selectedGroup === group._id && (
-              <div style={{ marginTop: "20px" }}>
+              <div
+                style={{
+                  marginTop: "20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
                 <button
                   onClick={() => {
                     setSelectedSubject(null);
@@ -303,15 +319,43 @@ const Grades = ({ user, token, apiUrl }) => {
                 >
                   Скрыть журнал
                 </button>
-                <GradesBySubject
-                  subject={selectedSubject}
-                  availableStudents={availableStudents}
-                  fetchGroupMembers={() => fetchGroupMembers()}
-                  groupId={group._id}
-                  token={token}
-                  user={user}
-                  apiUrl={apiUrl}
-                />
+                <div className="grade-tabs">
+                  <button
+                    className={`grades-tab-button ${
+                      activeTab === "grades" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab("grades")}
+                  >
+                    Оценки
+                  </button>
+                  <button
+                    className={`gradebook-tab-button ${
+                      activeTab === "gradebook" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab("gradebook")}
+                  >
+                    Зачётка
+                  </button>
+                </div>
+                {activeTab === "grades" ? (
+                  <GradesBySubject
+                    subject={selectedSubject}
+                    availableStudents={availableStudents}
+                    fetchGroupMembers={() => fetchGroupMembers()}
+                    groupId={group._id}
+                    token={token}
+                    user={user}
+                    apiUrl={apiUrl}
+                  />
+                ) : (
+                  <GradebookBySubject
+                    apiUrl={apiUrl}
+                    token={token}
+                    subject={selectedSubject}
+                    user={user}
+                    groupId={group._id}
+                  />
+                )}
               </div>
             )}
           </div>

@@ -1,9 +1,11 @@
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 const TooltipWrapper = ({ children, label }) => (
-  <Tooltip.Provider delayDuration={1000}>
+  <Tooltip.Provider delayDuration={700}>
     <Tooltip.Root>
-      <Tooltip.Trigger asChild>{children}</Tooltip.Trigger>
+      <Tooltip.Trigger asChild>
+        {typeof children === "string" ? <span>{children}</span> : children}
+      </Tooltip.Trigger>
       <Tooltip.Portal>
         <Tooltip.Content
           side="right"

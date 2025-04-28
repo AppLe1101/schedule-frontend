@@ -10,10 +10,14 @@ import CommentSection from "./CommentSection";
 import TiptapEditor from "./TiptapEditor";
 import DescriptionRenderer from "./DescriptionRenderer";
 import DetailedProfileView from "./DetailedProfileView";
+import TooltipWrapper from "./TooltipWrapper";
+import { shorterName } from "./utils/shorterName";
+import { motion, AnimatePresence } from "framer-motion";
 import "./styles/Profile.css";
 
 const Profile = ({ user, token, apiUrl }) => {
   const { id } = useParams();
+  const enableAnimations = !user?.enableAnimations;
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [profile, setProfile] = useState(null);
   const [groupName, setGroupName] = useState("");
@@ -244,7 +248,12 @@ const Profile = ({ user, token, apiUrl }) => {
     );
   }
   return (
-    <div className="user-profile">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="user-profile"
+    >
       <button onClick={() => navigate(-1)} className="back-button">
         ← Назад
       </button>
@@ -268,168 +277,200 @@ const Profile = ({ user, token, apiUrl }) => {
           </button>
         </div>
       )}
-      {tab === "details" ? (
-        <DetailedProfileView profile={profile} groupName={groupName} />
-      ) : (
-        <>
-          <div className="profile-card">
-            <div className="profile-avatar">
-              {isSelf ? (
-                <div>
+      <AnimatePresence mode="wait">
+        {tab === "details" ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          >
+            <DetailedProfileView profile={profile} groupName={groupName} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key={profile}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div className="profile-card">
+              <div className="profile-avatar">
+                {isSelf ? (
+                  <div>
+                    <img
+                      src={
+                        avatarUrl ||
+                        "https://res.cloudinary.com/dbw9zoxts/image/upload/v1743674361/avatars/nufw7lvuhkqy9jgjorbv.png"
+                      }
+                      alt="Аватар профиля"
+                      onClick={handleAvatarClick}
+                      className="avatar-img self"
+                      style={{ cursor: "pointer" }}
+                    />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      onChange={handleAvatarChange}
+                      style={{ display: "none" }}
+                    />
+                  </div>
+                ) : (
                   <img
                     src={
-                      avatarUrl ||
+                      profile.avatar ||
                       "https://res.cloudinary.com/dbw9zoxts/image/upload/v1743674361/avatars/nufw7lvuhkqy9jgjorbv.png"
                     }
                     alt="Аватар профиля"
-                    onClick={handleAvatarClick}
-                    className="avatar-img self"
-                    style={{ cursor: "pointer" }}
+                    className="avatar-img"
                   />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    ref={fileInputRef}
-                    onChange={handleAvatarChange}
-                    style={{ display: "none" }}
-                  />
+                )}
+              </div>
+              <div className="profile-info">
+                <div className="profile-name">
+                  <TooltipWrapper label={profile.username}>
+                    {shorterName(profile.username)}
+                  </TooltipWrapper>
+                  {profile._id === "67ab1aa0af53f6eca8443d6e" && (
+                    <BadgeCheck
+                      color="#faa307"
+                      height={"20px"}
+                      style={{ transform: "translateY(5px)" }}
+                    />
+                  )}
+                  {isSelf && <span className="self-label">(вы)</span>}{" "}
                 </div>
-              ) : (
-                <img
-                  src={
-                    profile.avatar ||
-                    "https://res.cloudinary.com/dbw9zoxts/image/upload/v1743674361/avatars/nufw7lvuhkqy9jgjorbv.png"
-                  }
-                  alt="Аватар профиля"
-                  className="avatar-img"
-                />
-              )}
-            </div>
-            <div className="profile-info">
-              <div className="profile-name">
-                {profile.username}{" "}
-                {profile._id === "67ab1aa0af53f6eca8443d6e" && (
-                  <BadgeCheck
-                    color="#faa307"
-                    height={"20px"}
-                    style={{ transform: "translateY(5px)" }}
-                  />
-                )}
-                {isSelf && <span className="self-label">(вы)</span>}{" "}
-              </div>
-              <div className="badge-list-profile">
-                {(profile.visibleBadges?.length > 0 || isSelf) && (
-                  <div className="profile-badges">
-                    {profile.visibleBadges
-                      ?.map((id) => allBadges.find((b) => b._id === id))
-                      .filter(Boolean)
-                      .map((badge) => (
+                <div className="badge-list-profile">
+                  {(profile.visibleBadges?.length > 0 || isSelf) && (
+                    <div className="profile-badges">
+                      {profile.visibleBadges
+                        ?.map((id) => allBadges.find((b) => b._id === id))
+                        .filter(Boolean)
+                        .map((badge) => (
+                          <div
+                            key={badge._id}
+                            className="profile-badge"
+                            title={badge.name}
+                          >
+                            <img src={badge.icon} alt={badge.name} />
+                          </div>
+                        ))}
+                      {isSelf && (
                         <div
-                          key={badge._id}
-                          className="profile-badge"
-                          title={badge.name}
+                          className="profile-badge add-badge"
+                          onClick={() => setShowBadgePicker(true)}
+                          title="Выбрать значки"
                         >
-                          <img src={badge.icon} alt={badge.name} />
+                          <Plus color="gray" />
                         </div>
-                      ))}
-                    {isSelf && (
-                      <div
-                        className="profile-badge add-badge"
-                        onClick={() => setShowBadgePicker(true)}
-                        title="Выбрать значки"
-                      >
-                        <Plus color="gray" />
-                      </div>
-                    )}
-                    {showBadgePicker && (
-                      <div className="badge-picker">
-                        <h4>Выберите до 5 значков</h4>
-                        <div className="badge-options">
-                          {ownedBadges.map((badge) => {
-                            const isSelected = profile.visibleBadges?.includes(
-                              badge._id
-                            );
-                            return (
-                              <div
-                                key={badge._id}
-                                className={`badge-option ${
-                                  isSelected ? "selected" : ""
-                                }`}
-                                onClick={() => toggleBadge(badge)}
-                              >
-                                <img src={badge.icon} alt={badge.name} />
-                              </div>
-                            );
-                          })}
+                      )}
+                      {showBadgePicker && (
+                        <div className="badge-picker">
+                          <h4>Выберите до 5 значков</h4>
+                          <div className="badge-options">
+                            {ownedBadges.map((badge) => {
+                              const isSelected =
+                                profile.visibleBadges?.includes(badge._id);
+                              return (
+                                <div
+                                  key={badge._id}
+                                  className={`badge-option ${
+                                    isSelected ? "selected" : ""
+                                  }`}
+                                  onClick={() => toggleBadge(badge)}
+                                >
+                                  <img src={badge.icon} alt={badge.name} />
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <div className="badge-picker-button-container">
+                            <button onClick={saveVisibleBadges}>
+                              💾 Сохранить
+                            </button>
+                            <button onClick={() => setShowBadgePicker(false)}>
+                              ✖ Закрыть
+                            </button>
+                          </div>
                         </div>
-                        <div className="badge-picker-button-container">
-                          <button onClick={saveVisibleBadges}>
-                            💾 Сохранить
-                          </button>
-                          <button onClick={() => setShowBadgePicker(false)}>
-                            ✖ Закрыть
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              <p>
-                <small>
-                  <strong>ID:</strong> {profile._id}
-                </small>
-              </p>
-              <p>
-                <strong>Статус:</strong>{" "}
-                {profile.role === "student"
-                  ? "Ученик"
-                  : profile.role === "teacher"
-                  ? "Преподаватель"
-                  : "Директор"}
-              </p>
-              {profile.role === "student" && (
-                <p>
-                  <strong>Группа:</strong> {groupName || "—"}
-                </p>
-              )}
-              <div className="profile-rating">
-                <p>Рейтинг:</p>
-                {profile._id !== "67ab1aa0af53f6eca8443d6e" ? (
-                  profile.role === "student" ? (
-                    <div
-                      className="stars"
-                      style={{ transform: "translateY(3px)" }}
-                    >
-                      {[...Array(5)].map((_, i) => {
-                        const full = i + 1 <= rating;
-                        const half = i + 0.5 === rating;
-
-                        return (
-                          <span key={i}>
-                            {full ? (
-                              <Star
-                                className="text-yellow-400 w-5 h-5"
-                                color="#faa307"
-                                fill="#ffba08"
-                              />
-                            ) : half ? (
-                              <Star
-                                className="text-yellow-400 w-5 h-5 opacity-50"
-                                color="#faa307"
-                                fill="#ffba08"
-                                opacity="50%"
-                              />
-                            ) : (
-                              <Star
-                                className="text-gray-300 w-5 h-5"
-                                color="gray"
-                              />
-                            )}
-                          </span>
-                        );
-                      })}
+                      )}
                     </div>
+                  )}
+                </div>
+                <p>
+                  <small>
+                    <strong>ID:</strong> {profile.uuid}
+                  </small>
+                </p>
+                <p>
+                  <strong>Статус:</strong>{" "}
+                  {profile.role === "student"
+                    ? "Ученик"
+                    : profile.role === "teacher"
+                    ? "Преподаватель"
+                    : "Директор"}
+                </p>
+                {profile.role === "student" && (
+                  <p>
+                    <strong>Группа:</strong> {groupName || "—"}
+                  </p>
+                )}
+                <div className="profile-rating">
+                  <p>Рейтинг:</p>
+                  {profile._id !== "67ab1aa0af53f6eca8443d6e" ? (
+                    profile.role === "student" ? (
+                      <div
+                        className="stars"
+                        style={{ transform: "translateY(3px)" }}
+                      >
+                        {[...Array(5)].map((_, i) => {
+                          const full = i + 1 <= rating;
+                          const half = i + 0.5 === rating;
+
+                          return (
+                            <span key={i}>
+                              {full ? (
+                                <Star
+                                  className="text-yellow-400 w-5 h-5"
+                                  color="#faa307"
+                                  fill="#ffba08"
+                                />
+                              ) : half ? (
+                                <Star
+                                  className="text-yellow-400 w-5 h-5 opacity-50"
+                                  color="#faa307"
+                                  fill="#ffba08"
+                                  opacity="50%"
+                                />
+                              ) : (
+                                <Star
+                                  className="text-gray-300 w-5 h-5"
+                                  color="gray"
+                                />
+                              )}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div
+                        className="stars"
+                        style={{ transform: "translateY(3px)" }}
+                      >
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i}>
+                            <Star color="#00b4d8" fill="#48cae4" />
+                          </span>
+                        ))}
+                      </div>
+                    )
                   ) : (
                     <div
                       className="stars"
@@ -437,102 +478,93 @@ const Profile = ({ user, token, apiUrl }) => {
                     >
                       {[...Array(5)].map((_, i) => (
                         <span key={i}>
-                          <Star color="#00b4d8" fill="#48cae4" />
+                          <Star color="#c9184a" fill="#ff4d6d" />
                         </span>
                       ))}
                     </div>
-                  )
-                ) : (
-                  <div
-                    className="stars"
-                    style={{ transform: "translateY(3px)" }}
-                  >
-                    {[...Array(5)].map((_, i) => (
-                      <span key={i}>
-                        <Star color="#c9184a" fill="#ff4d6d" />
-                      </span>
-                    ))}
-                  </div>
+                  )}
+                </div>
+                {isSelf && (
+                  <TooltipWrapper label={"Настройки"}>
+                    <Link
+                      to={`/profile/settings`}
+                      style={{
+                        textDecoration: "none",
+                        color: "black",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Settings />
+                    </Link>
+                  </TooltipWrapper>
+                )}
+                {!isSelf && (
+                  <button onClick={() => setIsReportOpen(true)}>Репорт</button>
                 )}
               </div>
-              {isSelf && (
-                <Link
-                  to={`/profile/${user._id}/settings`}
-                  style={{
-                    textDecoration: "none",
-                    color: "black",
-                    cursor: "pointer",
-                  }}
-                >
-                  <Settings />
-                </Link>
-              )}
-              {!isSelf && (
-                <button onClick={() => setIsReportOpen(true)}>Репорт</button>
-              )}
             </div>
-          </div>
-          {isReportOpen && (
-            <ReportModal
-              isOpen={isReportOpen}
-              onClose={() => setIsReportOpen(false)}
-              onSubmit={handleReportSend}
-              targetId={profile._id}
-            />
-          )}
-          <div className="description-container">
-            <div className="description-header">
-              <h3>О себе</h3>
-              {isSelf && !editingDescription && (
-                <button
-                  onClick={() => setEditingDescription(true)}
-                  className="description-edit-button"
-                  title="Редактировать описание"
-                >
-                  <PencilLine height={"20px"} width={"20px"} />
-                </button>
-              )}
-            </div>
-
-            {editingDescription ? (
-              isSelf && (
-                <>
-                  <TiptapEditor
-                    apiUrl={apiUrl}
-                    token={token}
-                    initialContent={profile.description}
-                    onChange={(html) => setNewDescription(html)}
-                  />
-                  <div className="desc-buttons">
-                    <button onClick={saveDescription}>💾 Сохранить</button>
-                    <button onClick={() => setEditingDescription(false)}>
-                      ✖ Отмена
-                    </button>
-                  </div>
-                </>
-              )
-            ) : profile.description ? (
-              <div className="profile-description">
-                <DescriptionRenderer content={profile.description} />
-              </div>
-            ) : (
-              <div className="no-description">
-                {isSelf ? "Описание не добавлено." : "Описание отсутствует."}
-              </div>
+            {isReportOpen && (
+              <ReportModal
+                isOpen={isReportOpen}
+                onClose={() => setIsReportOpen(false)}
+                onSubmit={handleReportSend}
+                targetId={profile._id}
+              />
             )}
-          </div>
+            <div className="description-container">
+              <div className="description-header">
+                <h3>О себе</h3>
+                {isSelf && !editingDescription && (
+                  <button
+                    onClick={() => setEditingDescription(true)}
+                    className="description-edit-button"
+                    title="Редактировать описание"
+                  >
+                    <PencilLine height={"20px"} width={"20px"} />
+                  </button>
+                )}
+              </div>
 
-          {profile.allowComments && (
-            <CommentSection
-              apiUrl={apiUrl}
-              token={token}
-              targetUserId={profile._id}
-              currentUser={user}
-            />
-          )}
-        </>
-      )}
-    </div>
+              {editingDescription ? (
+                isSelf && (
+                  <>
+                    <TiptapEditor
+                      apiUrl={apiUrl}
+                      token={token}
+                      initialContent={profile.description}
+                      onChange={(html) => setNewDescription(html)}
+                    />
+                    <div className="desc-buttons">
+                      <button onClick={saveDescription}>💾 Сохранить</button>
+                      <button onClick={() => setEditingDescription(false)}>
+                        ✖ Отмена
+                      </button>
+                    </div>
+                  </>
+                )
+              ) : profile.description ? (
+                <div className="profile-description">
+                  <DescriptionRenderer content={profile.description} />
+                </div>
+              ) : (
+                <div className="no-description">
+                  {isSelf ? "Описание не добавлено." : "Описание отсутствует."}
+                </div>
+              )}
+            </div>
+
+            {profile.allowComments && (
+              <CommentSection
+                apiUrl={apiUrl}
+                token={token}
+                targetUserId={profile._id}
+                currentUser={user}
+              />
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

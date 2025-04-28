@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Loading from "./Loading";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const ReportTab = ({ apiUrl, token, user }) => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  //const enableAnimations = !user.enableAnimations;
 
   const fetchReports = async () => {
     try {
@@ -13,6 +15,7 @@ const ReportTab = ({ apiUrl, token, user }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setReports(res.data);
+      console.log(user);
     } catch (err) {
       console.error("Ошибка при загрузке жалоб", err);
     } finally {
@@ -58,8 +61,20 @@ const ReportTab = ({ apiUrl, token, user }) => {
     <div className="reports-container">
       <h2>Жалобы</h2>
       <div className="counter">Жалоб: {reports.length}</div>
-      {reports.map((report) => (
-        <div key={report._id} className="report-item">
+      {reports.map((report, index) => (
+        <motion.div
+          key={report._id}
+          className="report-item"
+          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 200,
+            damping: 25,
+            bounce: 0.5,
+            delay: index * 0.1,
+          }}
+        >
           <div className="report-content">
             <strong>
               <Link to={`/profile/${report.author?._id}`}>
@@ -92,7 +107,7 @@ const ReportTab = ({ apiUrl, token, user }) => {
             )}
             <button onClick={() => handleDelete(report._id)}>Удалить</button>
           </div>
-        </div>
+        </motion.div>
       ))}
     </div>
   );

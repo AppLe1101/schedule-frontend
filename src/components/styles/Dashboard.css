@@ -86,7 +86,6 @@
   backdrop-filter: blur(16px) saturate(180%);
   box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease;
-  animation: fadeIn 0.2s ease-in;
 }
 .report-item:hover {
   transform: scale(1.01);
@@ -328,7 +327,6 @@
   margin-bottom: 16px;
   backdrop-filter: blur(16px) saturate(180%);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.2s ease-in;
 }
 
 .group-card h4 {

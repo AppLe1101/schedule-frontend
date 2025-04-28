@@ -2,7 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { shorterName } from "./utils/shorterName";
 import "./styles/GradesBySubject.css";
+
 const GradesBySubject = ({
   subject,
   groupId,
@@ -248,7 +250,7 @@ const GradesBySubject = ({
                       to={`/profile/${student._id}`}
                       className="student-link"
                     >
-                      {student.username}
+                      {shorterName(student.username)}
                     </Link>
                     <button
                       className="remove-btn"

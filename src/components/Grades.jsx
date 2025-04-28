@@ -250,7 +250,6 @@ const Grades = ({ user, token, apiUrl }) => {
                       <div key={teacher._id} className="member-item">
                         <Link
                           style={{ textDecoration: "none", color: "black" }}
-                          key={teacher._id}
                           to={`/profile/${teacher._id}`}
                         >
                           <span>👨‍🏫 {teacher.username}</span>
@@ -334,7 +333,7 @@ const Grades = ({ user, token, apiUrl }) => {
                     }`}
                     onClick={() => setActiveTab("gradebook")}
                   >
-                    Зачётка
+                    Зачетная книжка
                   </button>
                 </div>
                 {activeTab === "grades" ? (

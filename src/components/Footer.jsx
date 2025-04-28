@@ -17,7 +17,7 @@ const Footer = () => {
         >
           АнтиПлагиат
         </Link>
-        <p>© Сloud, Ink.</p>
+        <p>© Сloud Team</p>
       </div>
     </div>
   );

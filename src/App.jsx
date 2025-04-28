@@ -19,10 +19,14 @@ import Dashboard from "./components/Dashboard";
 import HomeworkItemPage from "./components/HomeworkItemPage";
 import TermsAndPolicy from "./components/TermsAndPolicy";
 import Footer from "./components/Footer";
+import NotFoundPage from "./components/NotFondPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./components/utils/axiosSetup";
 import "./App.css";
+import { AnimatePresence } from "framer-motion";
+
+import PrivateRoute from "./components/PrivateRoute";
 
 //const apiUrl = process.env.REACT_APP_API_URL;
 const apiUrl = "https://mk1-schedule-backend-ff28aedc0b67.herokuapp.com";
@@ -116,7 +120,10 @@ function App() {
         />
       )}
 
-      <div className="App" style={{ marginRight: token ? "120px" : "0" }}>
+      <div
+        className="App"
+        style={{ marginRight: token ? "120px" : "0", marginBottom: "55px" }}
+      >
         <header className="App-header"></header>
 
         <main>
@@ -124,11 +131,9 @@ function App() {
             <Route
               path="/"
               element={
-                token ? (
+                <PrivateRoute token={token}>
                   <MainPage token={token} user={user} apiUrl={apiUrl} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                </PrivateRoute>
               }
             />
 
@@ -152,45 +157,43 @@ function App() {
             <Route
               path="/groups"
               element={
-                token ? (
+                <PrivateRoute token={token}>
                   <Groups token={token} user={user} apiUrl={apiUrl} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                </PrivateRoute>
               }
             />
 
             <Route
               path="/groups/:groupId"
-              element={<Groups token={token} user={user} />}
+              element={
+                <PrivateRoute token={token}>
+                  <Groups token={token} user={user} apiUrl={apiUrl} />
+                </PrivateRoute>
+              }
             />
 
             <Route
               path="/grades"
               element={
-                token ? (
+                <PrivateRoute token={token}>
                   <Grades token={token} user={user} apiUrl={apiUrl} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                </PrivateRoute>
               }
             />
 
             <Route
               path="/profile/:id"
               element={
-                token ? (
+                <PrivateRoute token={token}>
                   <Profile token={token} user={user} apiUrl={apiUrl} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                </PrivateRoute>
               }
             />
 
             <Route
-              path="/profile/:id/settings"
+              path="/profile/settings"
               element={
-                token ? (
+                <PrivateRoute token={token}>
                   <Settings
                     token={token}
                     user={user}
@@ -198,75 +201,70 @@ function App() {
                     theme={theme}
                     setTheme={setTheme}
                   />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                </PrivateRoute>
               }
             />
 
             <Route
               path="/news"
               element={
-                token ? (
+                <PrivateRoute token={token}>
                   <MainPage token={token} user={user} apiUrl={apiUrl} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                </PrivateRoute>
               }
             />
 
             <Route
               path="/grades/:studentId"
               element={
-                token ? (
+                <PrivateRoute token={token}>
                   <GradesByStudent token={token} user={user} apiUrl={apiUrl} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                </PrivateRoute>
               }
             />
 
             <Route
               path="/homework"
               element={
-                token ? (
+                <PrivateRoute token={token}>
                   <HomeworkPage token={token} user={user} apiUrl={apiUrl} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                </PrivateRoute>
               }
             />
 
             <Route
               path="/homework/:id"
               element={
-                token ? (
+                <PrivateRoute token={token}>
                   <HomeworkItemPage token={token} user={user} apiUrl={apiUrl} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                </PrivateRoute>
               }
             />
 
             <Route
               path="/dashboard"
               element={
-                token ? (
+                <PrivateRoute token={token}>
                   <Dashboard token={token} user={user} apiUrl={apiUrl} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                </PrivateRoute>
               }
             />
 
             <Route path="/policy" element={<TermsAndPolicy />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
         <footer style={{ position: "fixed", bottom: "0", width: "100%" }}>
           <Footer />
         </footer>
       </div>
-      <ToastContainer />
+      <ToastContainer
+        rtl={false}
+        draggable
+        toastStyle={{ borderRadius: "15px" }}
+        hideProgressBar={true}
+        autoClose={2000}
+      />
     </>
   );
 }

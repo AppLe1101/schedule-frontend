@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./styles/ReportModal.css";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ReportModal = ({ isOpen, onClose, onSubmit, targetId }) => {
   const [reason, setReason] = useState("Оскорбительное поведение");
@@ -21,42 +22,50 @@ const ReportModal = ({ isOpen, onClose, onSubmit, targetId }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <h2 className="rep-modal-header">Пожаловаться</h2>
-
-        <label className="rep-modal-reason-text">Причина жалобы:</label>
-        <select
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-          className="rep-modal-reason-select"
+    <AnimatePresence>
+      <div className="modal-overlay">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.3 }}
+          className="modal"
         >
-          {reasons.map((r) => (
-            <option key={r} value={r}>
-              {r}
-            </option>
-          ))}
-        </select>
+          <h2 className="rep-modal-header">Пожаловаться</h2>
 
-        {reason === "Другое" && (
-          <textarea
-            placeholder="Введите причину..."
-            value={customReason}
-            onChange={(e) => setCustomReason(e.target.value)}
-            className="rep-modal-reason-textarea"
-          />
-        )}
+          <label className="rep-modal-reason-text">Причина жалобы:</label>
+          <select
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            className="rep-modal-reason-select"
+          >
+            {reasons.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+          </select>
 
-        <div className="rep-modal-buttons">
-          <button onClick={onClose} className="rep-modal-cancel-button">
-            Отмена
-          </button>
-          <button onClick={handleSend} className="rep-modal-send-button">
-            Отправить
-          </button>
-        </div>
+          {reason === "Другое" && (
+            <textarea
+              placeholder="Введите причину..."
+              value={customReason}
+              onChange={(e) => setCustomReason(e.target.value)}
+              className="rep-modal-reason-textarea"
+            />
+          )}
+
+          <div className="rep-modal-buttons">
+            <button onClick={onClose} className="rep-modal-cancel-button">
+              Отмена
+            </button>
+            <button onClick={handleSend} className="rep-modal-send-button">
+              Отправить
+            </button>
+          </div>
+        </motion.div>
       </div>
-    </div>
+    </AnimatePresence>
   );
 };
 

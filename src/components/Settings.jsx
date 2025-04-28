@@ -26,6 +26,7 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
   const [phone, setPhone] = useState("");
   const [editingEmail, setEditingEmail] = useState(false);
   const [editingPhone, setEditingPhone] = useState(false);
+  const [enableAnimations, setEnableAnimations] = useState(true);
   const [showAccountDeletionModal, setShowAccountDeletionModal] =
     useState(false);
   const navigate = useNavigate();
@@ -38,8 +39,10 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
         });
         setTwoFAEnabled(res.data.twoFAEnabled);
         setAllowComments(res.data.allowComments);
+        setEnableAnimations(res.data.enableAnimations);
         setEmail(res.data.email || "");
         setPhone(res.data.phone || "");
+        console.log(res.data);
       } catch (err) {
         console.error("Ошибка при получении настроек:", err);
       } finally {
@@ -258,6 +261,34 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
           <span className="switch-label">
             Разрешить другим оставлять комментарии
           </span>
+        </label>
+      </div>
+
+      <div className="comments-toggle-setting">
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={enableAnimations}
+            onChange={async (e) => {
+              const newVal = e.target.checked;
+              setEnableAnimations(newVal);
+              try {
+                await axios.put(
+                  `${apiUrl}/api/users/${user._id}/update-animations-usage`,
+                  {
+                    enableAnimations: newVal,
+                  },
+                  {
+                    headers: { Authorization: `Bearer ${token}` },
+                  }
+                );
+              } catch (err) {
+                console.error("Ошибка при обновлении настроек анимаций:", err);
+              }
+            }}
+          />
+          <span className="slider"></span>
+          <span className="switch-label">Анимации</span>
         </label>
       </div>
 

@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { shorterName } from "./utils/shorterName";
 import "./styles/CommentSection.css";
+import { motion } from "framer-motion";
 
 const CommentSection = ({ apiUrl, token, targetUserId, currentUser }) => {
+  const enableAnimations = !currentUser?.enableAnimations;
   const [comments, setComments] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
@@ -67,8 +70,20 @@ const CommentSection = ({ apiUrl, token, targetUserId, currentUser }) => {
         <p>Комментариев нет</p>
       ) : (
         <ul className="comments-list">
-          {comments.map((c) => (
-            <li key={c._id} className="comment-item">
+          {comments.map((c, index) => (
+            <motion.li
+              key={c._id}
+              className="comment-item"
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 25,
+                bounce: 0.5,
+                delay: index * 0.1,
+              }}
+            >
               <Link to={`/profile/${c.author?._id}`}>
                 <span className="comment-author">
                   <img
@@ -76,11 +91,11 @@ const CommentSection = ({ apiUrl, token, targetUserId, currentUser }) => {
                     src={c.author?.avatar}
                     alt="user avatar"
                   />
-                  {c.author?.username}
+                  {shorterName(c.author?.username)}
                 </span>
               </Link>
               -<span className="comment-text"> {c.text}</span>
-            </li>
+            </motion.li>
           ))}
         </ul>
       )}

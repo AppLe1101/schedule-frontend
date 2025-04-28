@@ -9,6 +9,7 @@ import TooltipWrapper from "./TooltipWrapper";
 import { BookMarked, LogOut, Newspaper, LayoutDashboard } from "lucide-react";
 import "./styles/SidebarNav.css";
 import "./styles/TooltipWrapper.css";
+import { motion } from "framer-motion";
 
 const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
   const location = useLocation();
@@ -71,51 +72,38 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
 
   return (
     <div className="sidebar-main">
-      {/* NOTIFICATIONS */}
-      {hasNewNews && (
-        <div className={`sidebar-nav-message ${expanded ? "none" : ""}`}>
-          {navItemsMain.map((item) => (
-            <TooltipWrapper key={item.path} label={item.label}>
-              <Link
-                to={item.path}
-                className={`sidebar-nav__item ${
-                  location.pathname === item.path ? "active" : ""
-                }`}
-              >
-                <span className="sidebar-icon">{item.icon}</span>
-              </Link>
-            </TooltipWrapper>
-          ))}
-        </div>
-      )}
+      <motion.div
+        initial={{ x: 60 }}
+        animate={{ x: 0 }}
+        exit={{ x: 60 }}
+        transition={{ duration: 0.5 }}
+        style={{ gap: "15px", display: "flex", flexDirection: "column" }}
+      >
+        {/* NOTIFICATIONS */}
+        {hasNewNews && (
+          <div className={`sidebar-nav-message ${expanded ? "none" : ""}`}>
+            {navItemsMain.map((item) => (
+              <TooltipWrapper key={item.path} label={item.label}>
+                <Link
+                  to={item.path}
+                  className={`sidebar-nav__item ${
+                    location.pathname === item.path ? "active" : ""
+                  }`}
+                >
+                  <span className="sidebar-icon">{item.icon}</span>
+                </Link>
+              </TooltipWrapper>
+            ))}
+          </div>
+        )}
 
-      {/* ADMIN SIDEBAR ELEMENTS */}
-      {(user.role === "director" || user.role === "admin") && (
-        <div
-          className={`sidebar-nav-admin ${expanded ? "none" : ""}`}
-          style={{ padding: "15px 0" }}
-        >
-          {adminItems.map((item) => (
-            <TooltipWrapper key={item.path} label={item.label}>
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`sidebar-nav__item ${
-                  location.pathname === item.path ? "active" : ""
-                }`}
-              >
-                <span className="sidebar-icon">{item.icon}</span>
-              </Link>
-            </TooltipWrapper>
-          ))}
-        </div>
-      )}
-
-      {/* MAIN SIDEBAR */}
-      <div className={`sidebar-nav ${expanded ? "expanded" : ""}`}>
-        {!showConfirm ? (
-          <>
-            {navItems.map((item) => (
+        {/* ADMIN SIDEBAR ELEMENTS */}
+        {(user.role === "director" || user.role === "admin") && (
+          <div
+            className={`sidebar-nav-admin ${expanded ? "none" : ""}`}
+            style={{ padding: "15px 0" }}
+          >
+            {adminItems.map((item) => (
               <TooltipWrapper key={item.path} label={item.label}>
                 <Link
                   key={item.path}
@@ -124,42 +112,63 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
                     location.pathname === item.path ? "active" : ""
                   }`}
                 >
-                  <div className="sidebar-icon">{item.icon}</div>
+                  <span className="sidebar-icon">{item.icon}</span>
                 </Link>
               </TooltipWrapper>
             ))}
-
-            {/* кнопка выхода */}
-            <button
-              onClick={() => {
-                setShowConfirm(true);
-                setExpanded(true);
-              }}
-              className="logout-btn"
-            >
-              <div className="sidebar-icon">
-                <LogOut color="black" />
-              </div>
-            </button>
-          </>
-        ) : (
-          <div className="confirm-logout">
-            <p>Вы уверены что хотите выйти с аккаунта?</p>
-            <button
-              onClick={() => {
-                setShowConfirm(false);
-                setExpanded(false);
-              }}
-              className="cancel-logout"
-            >
-              Отмена
-            </button>
-            <button onClick={handleLogout} className="confirm-logout-btn">
-              Выйти
-            </button>
           </div>
         )}
-      </div>
+
+        {/* MAIN SIDEBAR */}
+        <div className={`sidebar-nav ${expanded ? "expanded" : ""}`}>
+          {!showConfirm ? (
+            <>
+              {navItems.map((item) => (
+                <TooltipWrapper key={item.path} label={item.label}>
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`sidebar-nav__item ${
+                      location.pathname === item.path ? "active" : ""
+                    }`}
+                  >
+                    <div className="sidebar-icon">{item.icon}</div>
+                  </Link>
+                </TooltipWrapper>
+              ))}
+
+              {/* кнопка выхода */}
+              <button
+                onClick={() => {
+                  setShowConfirm(true);
+                  setExpanded(true);
+                }}
+                className="logout-btn"
+              >
+                <div className="sidebar-icon">
+                  <LogOut color="black" />
+                </div>
+              </button>
+            </>
+          ) : (
+            <div className="confirm-logout">
+              <p>Вы уверены что хотите выйти с аккаунта?</p>
+              <button
+                onClick={() => {
+                  setShowConfirm(false);
+                  setExpanded(false);
+                }}
+                className="cancel-logout"
+              >
+                Отмена
+              </button>
+              <button onClick={handleLogout} className="confirm-logout-btn">
+                Выйти
+              </button>
+            </div>
+          )}
+        </div>
+      </motion.div>
     </div>
   );
 };

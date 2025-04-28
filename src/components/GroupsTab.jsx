@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Loading from "./Loading";
 import axios from "axios";
 import "./styles/Dashboard.css";
+import { motion } from "framer-motion";
 
 const GroupsTab = ({ apiUrl, token, user }) => {
   const groupRefs = useRef({});
@@ -100,7 +101,7 @@ const GroupsTab = ({ apiUrl, token, user }) => {
           {filteredGroups.length > 0 && (
             <ul className="group-search-results">
               {filteredGroups.map((group) => (
-                <li
+                <motion.li
                   key={group._id}
                   onClick={() => {
                     const element = groupRefs.current[group._id];
@@ -120,17 +121,26 @@ const GroupsTab = ({ apiUrl, token, user }) => {
                   }}
                 >
                   {group.name}
-                </li>
+                </motion.li>
               ))}
             </ul>
           )}
         </div>
       </div>
-      {groups.map((group) => (
-        <div
+      {groups.map((group, index) => (
+        <motion.div
           key={group._id}
           className="group-card"
           ref={(el) => (groupRefs.current[group._id] = el)}
+          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 200,
+            damping: 25,
+            bounce: 0.5,
+            delay: index * 0.1,
+          }}
         >
           <h4>{group.name}</h4>
           {editingGroup === group._id ? (
@@ -210,7 +220,7 @@ const GroupsTab = ({ apiUrl, token, user }) => {
               </button>
             </div>
           )}
-        </div>
+        </motion.div>
       ))}
     </div>
   );

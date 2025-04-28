@@ -84,7 +84,9 @@ const GradebookBySubject = ({ subject, groupId, apiUrl, token, user }) => {
 
   return (
     <div className="gradebook-table-teacher">
-      <h3 style={{ margin: "5px" }}>Зачётка по предмету: {subject.name}</h3>
+      <h3 style={{ margin: "5px" }}>
+        Зачетная книжка по предмету: {subject.name}
+      </h3>
       <table>
         <thead>
           <tr>

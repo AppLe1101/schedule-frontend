@@ -37,7 +37,7 @@ const GradebookByStudent = ({ studentId, token, apiUrl }) => {
 
   return (
     <div className="student-gradebook-table">
-      <h2>Зачётка</h2>
+      <h2>Зачетная книжка</h2>
       <table className="gradebook-table">
         <thead>
           <tr>

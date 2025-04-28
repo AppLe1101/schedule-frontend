@@ -108,21 +108,222 @@ main {
 }
 .hw-editmode input,
 .hw-editmode textarea {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-}
-.hw-editmode button {
-  padding: 10px 16px;
-  border-radius: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
   border: none;
-  background: #007aff;
+  background-color: rgba(255, 255, 255, 0.25);
+  font-size: 16px;
+  resize: vertical;
+  min-height: 30px;
+}
+
+.edit-buttons-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  animation: fadeIn 0.3s ease;
+}
+
+.hw-editmode button {
+  width: 50%;
+  display: flex;
+}
+.hw-editmode button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* HOMEWORK SUBMISSION */
+
+.homework-submission {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+  padding: 20px;
+  background: var(--background-secondary);
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.homework-submission textarea {
+  width: 100%;
+  height: 120px;
+  min-height: 120px;
+  margin-bottom: 10px;
+  padding: 10px;
+  resize: vertical;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.submit-homework-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: var(--accent);
   color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.your-submission,
+.submissions-list {
+  margin-top: 30px;
+  padding: 20px;
+  background: var(--background-secondary);
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.submission-entry {
+  margin-top: 15px;
+  padding: 10px;
+  background: var(--background-light);
+  border-radius: 8px;
+}
+
+.submission-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.submission-table tbody {
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.submission-table th {
+  border: 1px solid #e0e0e0;
+  background-color: #f5f5f5;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.submission-table td {
+  border: 1px solid #e0e0e0;
+  padding: 8px 12px;
+}
+
+.open-homework-text-button,
+.download-button {
+  padding: 2px 6px;
   font-weight: 500;
+  font-size: 0.95em;
+  color: rgb(0, 119, 255);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px) saturate(160%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s;
+  animation: userHoverAnim 3s ease-in-out infinite;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.submission-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeInOp 0.3s ease;
+}
+
+.submission-modal-content {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  animation: popIn 0.3s ease;
+}
+
+.submission-text {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #333;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.close-modal-button {
+  background: #e0e0e0;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
   cursor: pointer;
   transition: background 0.2s ease;
 }
-.hw-editmode button:hover {
-  background: #0051c4;
+
+.close-modal-button:hover {
+  background: #d0d0d0;
+}
+
+@keyframes fadeInOp {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.file-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.file-preview {
+  background: #f3f3f3;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-download-card {
+  display: inline-block;
+  margin: 5px;
+  padding: 8px 12px;
+  background: #e0f7fa;
+  color: #00796b;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.file-download-card:hover {
+  background: #b2ebf2;
 }

@@ -244,6 +244,7 @@
 }
 
 .name-field-container,
+.email-field-container,
 .pass-field-container,
 .role-select-container {
   display: flex;
@@ -253,6 +254,7 @@
 }
 
 .name-input,
+.email-input,
 .pass-input,
 .role-select {
   padding: 10px 12px;

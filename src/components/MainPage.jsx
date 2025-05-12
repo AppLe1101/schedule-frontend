@@ -6,6 +6,7 @@ import Loading from "./Loading";
 import TiptapEditor from "./TiptapEditor";
 import NewsRenderer from "./NewsRenderer";
 import "./styles/MainPage.css";
+import { motion } from "framer-motion";
 
 const MainPage = ({ user, token, apiUrl }) => {
   const [searchParams] = useSearchParams();
@@ -146,7 +147,13 @@ const MainPage = ({ user, token, apiUrl }) => {
 
   // RETURN
   return (
-    <div className="news-page glass-card">
+    <motion.div
+      className="news-page glass-card"
+      initial={{ opacity: 1, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3 }}
+    >
       <h2 className="news-title" style={{ marginTop: "0" }}>
         Новости
       </h2>
@@ -185,7 +192,16 @@ const MainPage = ({ user, token, apiUrl }) => {
             return (
               <React.Fragment key={item._id}>
                 {showDivider && <hr className="news-divider" />}
-                <div
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 25,
+                    bounce: 0.5,
+                    delay: index * 0.1,
+                  }}
                   ref={item._id === highlightId ? highlightRef : null}
                   className={`news-item ${
                     item._id === highlightId ? "highlighted" : ""
@@ -251,13 +267,13 @@ const MainPage = ({ user, token, apiUrl }) => {
                       </button>
                     ) : null}
                   </div>
-                </div>
+                </motion.div>
               </React.Fragment>
             );
           })}
         </div>
       ) : null}
-    </div>
+    </motion.div>
   );
 };
 

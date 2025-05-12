@@ -11,6 +11,7 @@ import TiptapEditor from "./TiptapEditor";
 import DescriptionRenderer from "./DescriptionRenderer";
 import DetailedProfileView from "./DetailedProfileView";
 import TooltipWrapper from "./TooltipWrapper";
+import PremiumModal from "./PremiumModal";
 import { shorterName } from "./utils/shorterName";
 import { motion, AnimatePresence } from "framer-motion";
 import "./styles/Profile.css";
@@ -240,13 +241,6 @@ const Profile = ({ user, token, apiUrl }) => {
   if (!profile)
     return <div className="profile-not-found">Профиль не найден</div>;
 
-  {
-    tab === "details" ? (
-      <DetailedProfileView profile={profile} groupName={groupName} />
-    ) : (
-      <></>
-    );
-  }
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -275,11 +269,15 @@ const Profile = ({ user, token, apiUrl }) => {
           >
             Подробно
           </button>
+          <Link to={"/premium"} className="premium-link">
+            Премиум
+          </Link>
         </div>
       )}
       <AnimatePresence mode="wait">
         {tab === "details" ? (
           <motion.div
+            key={tab}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
@@ -289,7 +287,7 @@ const Profile = ({ user, token, apiUrl }) => {
           </motion.div>
         ) : (
           <motion.div
-            key={profile}
+            key={tab}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}

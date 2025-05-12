@@ -1,0 +1,39 @@
+.payment-history-container {
+  padding: 20px;
+}
+
+.payment-history-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.payment-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.text-currency-amount {
+  text-align: right;
+}
+
+.text-status {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.text-status div {
+  color: #ef4444;
+}
+
+.text-status.succeeded div {
+  color: #22c55e;
+}

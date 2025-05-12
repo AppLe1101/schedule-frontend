@@ -7,6 +7,7 @@ import TwoFAVerifyModal from "./TwoFAVerifyModal";
 import PasswordConfirmModal from "./PasswordConfirmModal";
 import DelReqModal from "./DelReqModal";
 import "./styles/Settings.css";
+import { motion } from "framer-motion";
 
 const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
   const { id } = useParams();
@@ -27,8 +28,10 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
   const [editingEmail, setEditingEmail] = useState(false);
   const [editingPhone, setEditingPhone] = useState(false);
   const [enableAnimations, setEnableAnimations] = useState(true);
-  const [showAccountDeletionModal, setShowAccountDeletionModal] =
-    useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [paymentMethods, setPaymentMethods] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,7 +45,11 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
         setEnableAnimations(res.data.enableAnimations);
         setEmail(res.data.email || "");
         setPhone(res.data.phone || "");
-        console.log(res.data);
+        setEmailVerified(res.data.emailVerified);
+        const cardsRes = await axios.get(`${apiUrl}/api/payments/methods`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setPaymentMethods(cardsRes.data.methods || []);
       } catch (err) {
         console.error("Ошибка при получении настроек:", err);
       } finally {
@@ -133,6 +140,70 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
     }
   };
 
+  const requestVerificationCode = async () => {
+    try {
+      await axios.post(
+        `${apiUrl}/api/users/request-email-verification`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      toast.success("Код отправлен на почту!");
+      setIsVerifying(true);
+    } catch (err) {
+      toast.error("Ошибка при отправке кода");
+    }
+  };
+
+  const verifyEmailCode = async () => {
+    try {
+      const res = await axios.post(
+        `${apiUrl}/api/users/verify-email`,
+        {
+          code: verificationCode,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      toast.success(res.data.message);
+      setEmailVerified(true);
+      setIsVerifying(false);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Ошибка подтверждения");
+    }
+  };
+
+  // Временно добавим фейковый способ оплаты для скрина
+  const mockedCard = {
+    id: "test_1234",
+    card: {
+      type: "Visa",
+      last4: "1234",
+      expiry_month: "12",
+      expiry_year: "2030",
+    },
+    brandIcon:
+      "https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png", // или локальную иконку
+  };
+  const methodsToRender =
+    paymentMethods.length === 0 ? [mockedCard] : paymentMethods;
+
+  const getCardIcon = (type) => {
+    switch (type?.toLowerCase()) {
+      case "visa":
+        return "/img/visa.svg";
+      case "mastercard":
+        return "/img/mastercard.svg";
+      case "mir":
+      case "мир":
+        return "/img/mir.svg";
+      default:
+        return "/img/credit-card.svg";
+    }
+  };
+
   if (loading)
     return (
       <div>
@@ -141,7 +212,14 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
     );
 
   return (
-    <div style={{ padding: "20px" }} className="settings-container">
+    <motion.div
+      style={{ padding: "20px" }}
+      className="settings-container"
+      initial={{ opacity: 1, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3 }}
+    >
       <h2>Настройки</h2>
 
       <button onClick={() => navigate(-1)} className="back-button">
@@ -151,6 +229,32 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
       {/* НАСТРОЙКИ ПРОФИЛЯ */}
       <div className="contacts-settings">
         <h3>Контактные данные</h3>
+
+        {!emailVerified && (
+          <div className="email-verification">
+            {isVerifying ? (
+              <div className="verifyingContacts">
+                <input
+                  className="email-code-input"
+                  type="text"
+                  placeholder="Введите код"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                />
+                <div className="buttons-container">
+                  <button onClick={verifyEmailCode}>Подтвердить</button>
+                  <button onClick={() => setIsVerifying(false)}>Отмена</button>
+                </div>
+              </div>
+            ) : (
+              <div className="verifyingContacts">
+                <p style={{ color: "white" }}>Ваша почта не подтверждена!</p>
+
+                <button onClick={requestVerificationCode}>Подтвердить</button>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="contact-field">
           <label>Email:</label>
@@ -168,9 +272,14 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
             </>
           ) : (
             <>
-              <span>{email || "Не указано"}</span>
-              <button onClick={() => setEditingEmail(true)}>
-                ✏ Редактировать
+              <span style={{ color: emailVerified ? "green" : "inherit" }}>
+                {email || "Не указано"}
+              </span>
+              <button
+                onClick={() => setEditingEmail(true)}
+                className="edit-button"
+              >
+                <img src="/img/edit.svg" />
               </button>
             </>
           )}
@@ -193,16 +302,66 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
           ) : (
             <>
               <span>{phone || "Не указано"}</span>
-              <button onClick={() => setEditingPhone(true)}>
-                ✏ Редактировать
+              <button
+                onClick={() => setEditingPhone(true)}
+                className="edit-button"
+              >
+                <img src="/img/edit.svg" />
               </button>
             </>
           )}
         </div>
+
+        <div className="payments-methods-settings">
+          <h3>Способы оплаты</h3>
+          {paymentMethods.length === 0 ? (
+            <p>Нет привязанных карт</p>
+          ) : (
+            paymentMethods.map((method) => (
+              <div key={method.id} className="payment-method-item">
+                <img
+                  src={getCardIcon(method.card.card_type)}
+                  alt={method.card.card_type}
+                  className="card-icon"
+                />
+                <span>
+                  {method.card.first6}******
+                  {method.card.last4} ({method.card.expiry_month},{" "}
+                  {method.card.expiry_year})
+                </span>
+                <button
+                  className="delete-card-button"
+                  onClick={async () => {
+                    try {
+                      await axios.delete(
+                        `${apiUrl}/api/payments/methods/${method.id}`,
+                        { headers: { Authorization: `Bearer ${token}` } }
+                      );
+                      toast.success("Карта удалена");
+                      setPaymentMethods((prev) =>
+                        prev.filter((m) => m.id !== method.id)
+                      );
+                    } catch (err) {
+                      toast.error("Ошибка при удалении карты");
+                    }
+                  }}
+                >
+                  Удалить
+                </button>
+              </div>
+            ))
+          )}
+          <button
+            style={{ marginTop: "10px" }}
+            onClick={() => navigate("/payment-history")}
+          >
+            История оплат
+          </button>
+        </div>
       </div>
 
       {/* НАСТРОЙКА ДВУХФАКТОРКИ */}
-      <div style={{ marginTop: "20px" }}>
+      <div className="twofa-settings">
         <h4>Двухфакторная аутентификация (2FA)</h4>
 
         {twoFAEnabled ? (
@@ -365,7 +524,7 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
           }}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 

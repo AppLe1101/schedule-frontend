@@ -77,7 +77,13 @@ const SidebarNav = ({ onLogout, user, apiUrl, token }) => {
         animate={{ x: 0 }}
         exit={{ x: 60 }}
         transition={{ duration: 0.5 }}
-        style={{ gap: "15px", display: "flex", flexDirection: "column" }}
+        style={{
+          gap: "15px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+        className="sidebar-inside"
       >
         {/* NOTIFICATIONS */}
         {hasNewNews && (

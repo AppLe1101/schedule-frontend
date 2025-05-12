@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 const UserRegisterTab = ({ apiUrl, token }) => {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
 
@@ -24,7 +25,7 @@ const UserRegisterTab = ({ apiUrl, token }) => {
   };
 
   const handleRegister = async () => {
-    if (!username || !password || !role) {
+    if (!username || !email || !password || !role) {
       toast.error("Заполните все поля!");
       return;
     }
@@ -32,17 +33,18 @@ const UserRegisterTab = ({ apiUrl, token }) => {
     try {
       await axios.post(
         `${apiUrl}/api/users`,
-        { username, password, role },
+        { username, email, password, role },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success("Пользователь успешно создан");
       setUsername("");
+      setEmail("");
       setPassword("");
       setRole("student");
     } catch (err) {
       console.error("Ошибка при создании пользователя:", err);
       if (err.response?.status === 409) {
-        toast.error("Пользователь с таким именем уже существует");
+        toast.error("Пользователь с такой почтой уже существует");
       } else {
         toast.error("Ошибка при создании пользователя");
       }
@@ -60,6 +62,17 @@ const UserRegisterTab = ({ apiUrl, token }) => {
           placeholder="Ф.И.О"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+
+      <div className="email-field-container">
+        <label>Почта</label>
+        <input
+          type="text"
+          className="email-input"
+          placeholder="example@example.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
 

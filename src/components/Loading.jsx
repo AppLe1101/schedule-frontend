@@ -27,7 +27,13 @@ const Loading = () => {
   }, []);
 
   return (
-    <div className="glass-loader-container">
+    <motion.div
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="glass-loader-container"
+    >
       <motion.div
         key={loopKey}
         className="glass-text-loading"
@@ -45,7 +51,7 @@ const Loading = () => {
           </motion.span>
         ))}
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

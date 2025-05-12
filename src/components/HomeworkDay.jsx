@@ -9,9 +9,16 @@ const HomeworkDay = ({ date, homework, token, user, apiUrl }) => {
     month: "long",
   });
 
+  const formatLocalDate = (d) => {
+    const date = new Date(d);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(date.getDate()).padStart(2, "0")}`;
+  };
+
   const dayHomework = homework.filter(
-    (item) =>
-      new Date(item.date).toDateString() === new Date(date).toDateString()
+    (item) => formatLocalDate(item.date) === formatLocalDate(date)
   );
 
   return (

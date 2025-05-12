@@ -1,13 +1,20 @@
 :root {
-  --bg: rgb(206, 206, 206);
-  --text: #000;
-  --glass: rgba(255, 255, 255, 0.1);
+  --text: #111;
+  --glass: rgba(255, 255, 255, 0.3);
+  --primary: #4f46e5;
+  --secondary: #9333ea;
+  --accent: #10b981;
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --border-radius: 20px;
 }
 
 [data-theme="default-dark"] {
-  --bg: #404040;
-  --text: #ffffff;
-  --glass: rgba(255, 255, 255, 0.06);
+  --bg: #1e1e1e;
+  --text: #f1f1f1;
+  --glass: rgba(255, 255, 255, 0.08);
+  --card-bg: rgba(40, 40, 40, 0.8);
+  --card-shadow: rgba(0, 0, 0, 0.4);
 }
 [data-theme="default-ultra-dark"] {
   --bg: #0f0f0f;
@@ -17,11 +24,20 @@
   color: var(--text);
 }
 
+html {
+  min-height: 100%;
+  background: radial-gradient(ellipse at top, #abc4ff, transparent),
+    radial-gradient(ellipse at bottom, #fff, transparent);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 body {
-  height: 100vh;
-  width: 100vw;
-  background-color: var(--bg);
-  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  color: var(--text);
+  font-family: "Inter", sans-serif;
 }
 main {
   height: 100vh;
@@ -130,6 +146,46 @@ button:hover {
   color: inherit;
 }
 
+/* Для успешных сообщений */
+.Toastify__toast--success {
+  background: #4caf4fbd; /* Зелёный */
+  backdrop-filter: blur(25px) saturate(180%);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+/* Для ошибок */
+.Toastify__toast--error {
+  background: #f44336be; /* Красный */
+  backdrop-filter: blur(25px) saturate(180%);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+/* Для инфо */
+.Toastify__toast--info {
+  background: #2196f3; /* Синий */
+  backdrop-filter: blur(25px) saturate(180%);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+/* Для предупреждений */
+.Toastify__toast--warn {
+  background: #ff9800; /* Оранжевый */
+  backdrop-filter: blur(25px) saturate(180%);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+@media screen and (max-width: 1120px) {
+  .profile-card {
+    flex-direction: column;
+    gap: 20px;
+    width: 90%;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .App {
     font-size: calc(10px + 2vmin);
@@ -138,5 +194,76 @@ button:hover {
     display: flex;
     justify-content: center;
     flex-direction: column;
+  }
+
+  .login-container {
+    margin: 0 auto;
+  }
+
+  .footer-container {
+    font-size: 16px;
+  }
+
+  .sidebar-main {
+    right: 50%;
+    flex-direction: row;
+    transform: translateX(50%);
+    top: 20px;
+  }
+  .sidebar-inside {
+    flex-direction: row !important;
+  }
+  .sidebar-nav {
+    justify-content: center;
+    flex-direction: row;
+  }
+  .sidebar-nav.expanded {
+    height: 110px;
+    transition: all 0.2s linear;
+  }
+
+  .homework-main-header-h1 {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .comment-item {
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .login-container {
+    margin: 0 10px;
+  }
+  .footer-container {
+    font-size: 9px;
+  }
+  .news-item {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .footer-container {
+    font-size: 7px;
+  }
+
+  .sidebar-main {
+    /**/
+  }
+
+  .sidebar-inside {
+    gap: 5px !important;
+  }
+
+  .sidebar-nav {
+    padding: 6px 8px;
+  }
+  .sidebar-nav-admin {
+    width: 55px;
+    padding: 7px 0 !important;
   }
 }

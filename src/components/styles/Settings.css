@@ -3,23 +3,25 @@
   flex-direction: column;
   gap: 15px;
   align-items: center;
-  animation: fadeIn 0.3s ease;
 }
 
 .comments-toggle-setting {
+  width: 100%;
+  max-width: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin: 15px 0;
+  margin: 5px 0;
   padding: 10px;
   border-radius: 16px;
-  background-color: #f0f0f0;
-  animation: fadeIn 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 .switch {
+  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex-direction: row-reverse;
   gap: 12px;
   user-select: none;
@@ -81,6 +83,15 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+.contacts-settings {
+  width: 100%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 .contact-field {
   margin-bottom: 16px;
   display: flex;
@@ -106,4 +117,88 @@
   color: #000;
   resize: none;
   font-size: 14px;
+}
+
+.email-verification {
+  margin: 10px auto;
+  padding: 8px 15px;
+  border: 1px rgba(255, 10, 10, 0.8) solid;
+  border-radius: 20px;
+  background-color: rgba(255, 10, 10, 0.6);
+}
+
+.verifyingContacts {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.email-code-input {
+  padding: 10px 14px;
+  font-size: 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(200, 200, 200, 0.3);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  outline: none;
+  color: white;
+}
+.email-code-input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.buttons-container {
+  display: flex;
+  gap: 15px;
+}
+
+/* 2FA STYLES */
+.twofa-settings {
+  width: 100%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* PAYMENTS */
+.payment-methods-settings {
+  margin-top: 30px;
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.payment-method-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.payment-method-item .card-icon {
+  width: 60px;
+  height: 25px;
+}
+
+.delete-card-button {
+  background: rgba(255, 10, 10, 0.6);
+  color: aliceblue;
+}
+
+.delete-card-button:hover {
+  background: rgba(255, 10, 10, 0.8);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.edit-button {
+  display: flex;
+  padding: 0;
+  background: none;
 }

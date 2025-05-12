@@ -121,12 +121,6 @@
     margin: 0 16px;
   }
 
-  .homework-main-header-h1 {
-    flex-direction: column;
-    width: 100%;
-    gap: 10px;
-  }
-
   .input-type-text,
   .input-type-date,
   .input-type-area,

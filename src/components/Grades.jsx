@@ -169,6 +169,7 @@ const Grades = ({ user, token, apiUrl }) => {
         />
         <GradebookByStudent
           studentId={user._id}
+          studentName={user.username}
           apiUrl={apiUrl}
           token={token}
         />
@@ -353,6 +354,8 @@ const Grades = ({ user, token, apiUrl }) => {
                     subject={selectedSubject}
                     user={user}
                     groupId={group._id}
+                    selectedGroup={selectedGroup}
+                    groupName={group.name}
                   />
                 )}
               </div>

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import axios from "axios";
 import TwoFAVerifyModal from "./TwoFAVerifyModal";
@@ -71,6 +71,11 @@ function Login({ onLogin, apiUrl }) {
           </button>
         </form>
       </div>
+
+      <div className="premium-link-login">
+        <Link to={"/premium"}>LearningPortal Premium</Link>
+      </div>
+
       {showTwoFAModal && (
         <CSSTransition
           nodeRef={nodeRef}

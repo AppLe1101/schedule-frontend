@@ -18,6 +18,9 @@ import Settings from "./components/Settings";
 import Dashboard from "./components/Dashboard";
 import HomeworkItemPage from "./components/HomeworkItemPage";
 import TermsAndPolicy from "./components/TermsAndPolicy";
+import PremiumPage from "./components/PremiumPage";
+import ThankYouPage from "./components/ThankYouPage";
+import PaymentHistoryPage from "./components/PaymentHistoryPage";
 import Footer from "./components/Footer";
 import NotFoundPage from "./components/NotFondPage";
 import { ToastContainer } from "react-toastify";
@@ -127,132 +130,156 @@ function App() {
         <header className="App-header"></header>
 
         <main>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <PrivateRoute token={token}>
-                  <MainPage token={token} user={user} apiUrl={apiUrl} />
-                </PrivateRoute>
-              }
-            />
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute token={token}>
+                    <MainPage token={token} user={user} apiUrl={apiUrl} />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/login"
-              element={
-                token && user ? (
-                  <Navigate
-                    to={
-                      sessionStorage.getItem("lastVisited") === "/login"
-                        ? "/news"
-                        : sessionStorage.getItem("lastVisited") || "/news"
-                    }
-                  />
-                ) : (
-                  <Login onLogin={handleLogin} apiUrl={apiUrl} />
-                )
-              }
-            />
+              <Route
+                path="/login"
+                element={
+                  token && user ? (
+                    <Navigate
+                      to={
+                        sessionStorage.getItem("lastVisited") === "/login"
+                          ? "/news"
+                          : sessionStorage.getItem("lastVisited") || "/news"
+                      }
+                    />
+                  ) : (
+                    <Login onLogin={handleLogin} apiUrl={apiUrl} />
+                  )
+                }
+              />
 
-            <Route
-              path="/groups"
-              element={
-                <PrivateRoute token={token}>
-                  <Groups token={token} user={user} apiUrl={apiUrl} />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/groups"
+                element={
+                  <PrivateRoute token={token}>
+                    <Groups token={token} user={user} apiUrl={apiUrl} />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/groups/:groupId"
-              element={
-                <PrivateRoute token={token}>
-                  <Groups token={token} user={user} apiUrl={apiUrl} />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/groups/:groupId"
+                element={
+                  <PrivateRoute token={token}>
+                    <Groups token={token} user={user} apiUrl={apiUrl} />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/grades"
-              element={
-                <PrivateRoute token={token}>
-                  <Grades token={token} user={user} apiUrl={apiUrl} />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/grades"
+                element={
+                  <PrivateRoute token={token}>
+                    <Grades token={token} user={user} apiUrl={apiUrl} />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/profile/:id"
-              element={
-                <PrivateRoute token={token}>
-                  <Profile token={token} user={user} apiUrl={apiUrl} />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/profile/:id"
+                element={
+                  <PrivateRoute token={token}>
+                    <Profile token={token} user={user} apiUrl={apiUrl} />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/profile/settings"
-              element={
-                <PrivateRoute token={token}>
-                  <Settings
-                    token={token}
-                    user={user}
-                    apiUrl={apiUrl}
-                    theme={theme}
-                    setTheme={setTheme}
-                  />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/profile/settings"
+                element={
+                  <PrivateRoute token={token}>
+                    <Settings
+                      token={token}
+                      user={user}
+                      apiUrl={apiUrl}
+                      theme={theme}
+                      setTheme={setTheme}
+                    />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/news"
-              element={
-                <PrivateRoute token={token}>
-                  <MainPage token={token} user={user} apiUrl={apiUrl} />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/news"
+                element={
+                  <PrivateRoute token={token}>
+                    <MainPage token={token} user={user} apiUrl={apiUrl} />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/grades/:studentId"
-              element={
-                <PrivateRoute token={token}>
-                  <GradesByStudent token={token} user={user} apiUrl={apiUrl} />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/grades/:studentId"
+                element={
+                  <PrivateRoute token={token}>
+                    <GradesByStudent
+                      token={token}
+                      user={user}
+                      apiUrl={apiUrl}
+                    />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/homework"
-              element={
-                <PrivateRoute token={token}>
-                  <HomeworkPage token={token} user={user} apiUrl={apiUrl} />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/homework"
+                element={
+                  <PrivateRoute token={token}>
+                    <HomeworkPage token={token} user={user} apiUrl={apiUrl} />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/homework/:id"
-              element={
-                <PrivateRoute token={token}>
-                  <HomeworkItemPage token={token} user={user} apiUrl={apiUrl} />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/homework/:id"
+                element={
+                  <PrivateRoute token={token}>
+                    <HomeworkItemPage
+                      token={token}
+                      user={user}
+                      apiUrl={apiUrl}
+                    />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/dashboard"
-              element={
-                <PrivateRoute token={token}>
-                  <Dashboard token={token} user={user} apiUrl={apiUrl} />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute token={token}>
+                    <Dashboard token={token} user={user} apiUrl={apiUrl} />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route path="/policy" element={<TermsAndPolicy />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+              <Route
+                path="/premium"
+                element={
+                  <PremiumPage user={user} apiUrl={apiUrl} token={token} />
+                }
+              />
+              <Route
+                path="/thanks"
+                element={<ThankYouPage apiUrl={apiUrl} />}
+              />
+              <Route
+                path="/payment-history"
+                element={<PaymentHistoryPage apiUrl={apiUrl} token={token} />}
+              />
+              <Route path="/policy" element={<TermsAndPolicy />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </AnimatePresence>
         </main>
         <footer style={{ position: "fixed", bottom: "0", width: "100%" }}>
           <Footer />

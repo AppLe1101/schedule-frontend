@@ -168,30 +168,6 @@
   margin: 0px 10px 0px 10px;
 }
 
-@media (orientation: portrait) {
-  .sidebar-main {
-    right: 50%;
-    flex-direction: row;
-    transform: translateX(50%);
-    top: 20px;
-  }
-
-  .sidebar-nav {
-    justify-content: center;
-    flex-direction: row;
-  }
-  .sidebar-nav.expanded {
-    height: 110px;
-    transition: all 0.2s linear;
-  }
-}
-@media screen and (max-height: 768px) {
-  .sidebar-main {
-    transform: translateY(-50%) scale(0.8);
-    right: 20px;
-    top: 50%;
-  }
-}
 @media (max-width: 768px) {
   .sidebar-nav {
     width: 300px;

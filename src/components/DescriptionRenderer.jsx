@@ -11,7 +11,6 @@ const DescriptionRenderer = ({ content }) => {
     extensions: [
       StarterKit,
       Underline,
-      Strike,
       Highlight,
       Mention.configure({
         HTMLAttributes: { class: "mention" },

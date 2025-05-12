@@ -29,7 +29,7 @@ const Dashboard = ({ user, apiUrl, token }) => {
         </div>
 
         {/* ABOUT ADMIN PANEL */}
-        <div className="ap-info">v1.3.0</div>
+        <div className="ap-info">v1.5.0</div>
       </div>
 
       {/* MAIN CONTENT */}

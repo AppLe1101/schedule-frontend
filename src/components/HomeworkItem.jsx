@@ -52,12 +52,12 @@ const HomeworkItem = ({ user, hw, isHighlighted, isEditable, onDelete }) => {
             👨‍🏫 {hw.createdBy.username}
           </Link>
         </div>
-        {isAuthor && (
-          <button onClick={() => onDelete(hw._id)} className="delete-btn">
-            ❌
-          </button>
-        )}
       </div>
+      {isAuthor && (
+        <button onClick={() => onDelete(hw._id)} className="delete-btn">
+          ❌
+        </button>
+      )}
     </div>
   );
 };

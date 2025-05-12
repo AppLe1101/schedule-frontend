@@ -7,6 +7,7 @@ import { CSSTransition } from "react-transition-group";
 import { useSearchParams } from "react-router-dom";
 import Loading from "./Loading";
 import "./styles/Groups.css";
+import { motion } from "framer-motion";
 
 function Groups({ token, user, apiUrl }) {
   const [groups, setGroups] = useState([]);
@@ -71,13 +72,28 @@ function Groups({ token, user, apiUrl }) {
   };
 
   return (
-    <div className="groups-container">
+    <motion.div
+      className="groups-container"
+      initial={{ opacity: 1, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3 }}
+    >
       <h1 style={{ marginBottom: "15px" }}>Расписание занятий</h1>
       <div className="groups-list">
         <h2>Группы</h2>
         {loading && <Loading className="profile-loading" />}
-        {groups.map((group) => (
-          <div
+        {groups.map((group, index) => (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 25,
+              bounce: 0.5,
+              delay: index * 0.1,
+            }}
             key={group._id}
             className="group-item "
             id={`group-${group._id}`}
@@ -113,7 +129,7 @@ function Groups({ token, user, apiUrl }) {
                 />
               </div>
             )}
-          </div>
+          </motion.div>
         ))}
 
         {showAddGroup && (
@@ -130,7 +146,7 @@ function Groups({ token, user, apiUrl }) {
           </button>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 

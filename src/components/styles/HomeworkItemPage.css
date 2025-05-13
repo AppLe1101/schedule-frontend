@@ -210,6 +210,8 @@ main {
 }
 
 .open-homework-text-button,
+.open-ai-comment-button,
+.open-grade-editor-button,
 .download-button {
   padding: 2px 6px;
   font-weight: 500;
@@ -261,7 +263,16 @@ main {
   white-space: pre-wrap;
 }
 
-.close-modal-button {
+.modal-buttons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-modal-button,
+.change-grade-button,
+.accept-grade-button {
   background: #e0e0e0;
   border: none;
   padding: 10px 20px;
@@ -270,7 +281,9 @@ main {
   transition: background 0.2s ease;
 }
 
-.close-modal-button:hover {
+.close-modal-button:hover,
+.change-grade-button:hover,
+.accept-grade-button:hover {
   background: #d0d0d0;
 }
 
@@ -326,4 +339,55 @@ main {
 
 .file-download-card:hover {
   background: #b2ebf2;
+}
+
+.ai-checking-block {
+  margin-top: 10px;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.glow-box {
+  padding: 12px;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.15);
+  animation: glowPulse 3s ease-in-out infinite;
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.3), 0 0 24px rgba(0, 170, 255, 0.2),
+    0 0 36px rgba(0, 170, 255, 0.1);
+}
+
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 12px rgba(0, 170, 255, 0.3), 0 0 24px rgba(0, 170, 255, 0.2),
+      0 0 36px rgba(0, 170, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(0, 170, 255, 0.5), 0 0 32px rgba(0, 170, 255, 0.3),
+      0 0 48px rgba(0, 170, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 12px rgba(0, 170, 255, 0.3), 0 0 24px rgba(0, 170, 255, 0.2),
+      0 0 36px rgba(0, 170, 255, 0.1);
+  }
+}
+
+.ai-comment {
+  margin-top: 10px;
+  font-style: italic;
+  color: #333;
+}
+
+.ai-result-block {
+  margin-top: 20px;
+  padding: 15px;
+  background: #e6ffe6;
+  border-radius: 10px;
+}
+
+.checking-text {
+  font-size: 16px;
+  color: #000000;
+  opacity: 0.9;
+  animation: fadeInText 1s ease forwards;
 }

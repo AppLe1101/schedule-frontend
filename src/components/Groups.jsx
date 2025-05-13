@@ -1,3 +1,8 @@
+// 🛡️ Project: LearningPortal
+// 📅 Created: 2025
+// 👤 Author: Dmitriy P.A.
+// 🔒 Proprietary Code – do not copy without permission.
+
 // src/components/Groups.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";

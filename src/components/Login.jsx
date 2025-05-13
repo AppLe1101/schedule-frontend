@@ -1,3 +1,8 @@
+// 🛡️ Project: LearningPortal
+// 📅 Created: 2025
+// 👤 Author: Dmitriy P.A.
+// 🔒 Proprietary Code – do not copy without permission.
+
 import React, { useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";

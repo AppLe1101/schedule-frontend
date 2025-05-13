@@ -1,3 +1,8 @@
+// 🛡️ Project: LearningPortal
+// 📅 Created: 2025
+// 👤 Author: Dmitriy P.A.
+// 🔒 Proprietary Code – do not copy without permission.
+
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./styles/GradesByStudent.css";

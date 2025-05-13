@@ -1,3 +1,8 @@
+// 🛡️ Project: LearningPortal
+// 📅 Created: 2025
+// 👤 Author: Dmitriy P.A.
+// 🔒 Proprietary Code – do not copy without permission.
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import HomeworkItem from "./HomeworkItem";
@@ -6,6 +11,7 @@ import "./styles/HomeworkEditorPanel.css";
 const HomeworkEditorPage = ({ token, apiUrl, user }) => {
   const [groups, setGroups] = useState([]);
   const [homeworkList, setHomeworkList] = useState([]);
+  const [subjects, setSubjects] = useState([]);
   const [formData, setFormData] = useState({
     groupId: "",
     subject: "",
@@ -80,7 +86,7 @@ const HomeworkEditorPage = ({ token, apiUrl, user }) => {
 
       const payload = {
         groupId: formData.groupId,
-        subject: formData.subject,
+        subjectId: formData.subject,
         date: formData.date,
         description: formData.description,
         files: uploadedUrls,
@@ -131,6 +137,26 @@ const HomeworkEditorPage = ({ token, apiUrl, user }) => {
   };
 
   useEffect(() => {
+    if (formData.groupId) {
+      const fetchSubjects = async () => {
+        try {
+          const res = await axios.get(
+            `${apiUrl}/api/subjects/${formData.groupId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          setSubjects(res.data);
+        } catch (err) {
+          console.error("Ошибка при загрузке предметов:", err);
+        }
+      };
+
+      fetchSubjects();
+    }
+  }, [formData.groupId]);
+
+  useEffect(() => {
     fetchHomeworkList();
   }, [formData.groupId]);
 
@@ -145,7 +171,9 @@ const HomeworkEditorPage = ({ token, apiUrl, user }) => {
             value={formData.groupId}
             onChange={handleChange}
           >
-            <option value="">Выбрать группу</option>
+            <option disabled value="">
+              Выбрать группу
+            </option>
             {groups.map((group) => (
               <option key={group._id} value={group._id}>
                 {group.name}
@@ -153,14 +181,21 @@ const HomeworkEditorPage = ({ token, apiUrl, user }) => {
             ))}
           </select>
 
-          <input
-            className="input-type-text"
+          <select
             name="subject"
-            type="text"
-            placeholder="Предмет"
             value={formData.subject}
             onChange={handleChange}
-          />
+            disabled={!formData.groupId || subjects.length === 0}
+          >
+            <option disabled value="">
+              Выбрать предмет
+            </option>
+            {subjects.map((subj) => (
+              <option key={subj._id} value={subj._id}>
+                {subj.name}
+              </option>
+            ))}
+          </select>
 
           <input
             className="input-type-date"
@@ -252,7 +287,10 @@ const HomeworkEditorPage = ({ token, apiUrl, user }) => {
             return `${day}.${month}.${year}`;
           };
           const hwDate = formatDate(hw.date);
-          const subjectMatch = hw.subject.toLowerCase().includes(textQuery);
+          const subjectMatch =
+            hw.subject &&
+            typeof hw.subject === "object" &&
+            hw.subject.name?.toLowerCase().includes(textQuery);
           const descriptionMatch = hw.description
             .toLowerCase()
             .includes(textQuery);

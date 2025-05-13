@@ -1,3 +1,8 @@
+// 🛡️ Project: LearningPortal
+// 📅 Created: 2025
+// 👤 Author: Dmitriy P.A.
+// 🔒 Proprietary Code – do not copy without permission.
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -28,6 +33,7 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
   const [editingEmail, setEditingEmail] = useState(false);
   const [editingPhone, setEditingPhone] = useState(false);
   const [enableAnimations, setEnableAnimations] = useState(true);
+  const [enableTrustAI, setEnableTrustAI] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
@@ -40,9 +46,11 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
         const res = await axios.get(`${apiUrl}/api/users/settings`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log(res.data);
         setTwoFAEnabled(res.data.twoFAEnabled);
         setAllowComments(res.data.allowComments);
         setEnableAnimations(res.data.enableAnimations);
+        setEnableTrustAI(res.data.trustAI);
         setEmail(res.data.email || "");
         setPhone(res.data.phone || "");
         setEmailVerified(res.data.emailVerified);
@@ -448,6 +456,37 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
           />
           <span className="slider"></span>
           <span className="switch-label">Анимации</span>
+        </label>
+      </div>
+
+      <div className="comments-toggle-setting">
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={enableTrustAI}
+            onChange={async (e) => {
+              const newVal = e.target.checked;
+              setEnableTrustAI(newVal);
+              try {
+                await axios.put(
+                  `${apiUrl}/api/users/${user._id}/update-trustAI-setting`,
+                  {
+                    trustAI: newVal,
+                  },
+                  {
+                    headers: { Authorization: `Bearer ${token}` },
+                  }
+                );
+              } catch (err) {
+                console.error(
+                  "Ошибка при обновлении настроек доверия ИИ:",
+                  err
+                );
+              }
+            }}
+          />
+          <span className="slider"></span>
+          <span className="switch-label">Доверять ИИ</span>
         </label>
       </div>
 

@@ -1,3 +1,8 @@
+// 🛡️ Project: LearningPortal
+// 📅 Created: 2025
+// 👤 Author: Dmitriy P.A.
+// 🔒 Proprietary Code – do not copy without permission.
+
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./styles/HomeworkItem.css";
@@ -18,7 +23,7 @@ const HomeworkItem = ({ user, hw, isHighlighted, isEditable, onDelete }) => {
       >
         {/* Предмет */}
         <div className="homework-field homework-subject">
-          <strong>{hw.subject}</strong>
+          <strong>{hw.subject.name}</strong>
         </div>
 
         {/* Описание */}

@@ -10,6 +10,8 @@ import Loading from "./Loading";
 import "./styles/HomeworkItemPage.css";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
+import TooltipWrapper from "./TooltipWrapper";
+import { BadgeHelp } from "lucide-react";
 
 const HomeworkItemPage = ({ user, apiUrl, token }) => {
   const { id } = useParams();
@@ -46,7 +48,6 @@ const HomeworkItemPage = ({ user, apiUrl, token }) => {
         title: res.data.subject,
         description: res.data.description,
       });
-      console.log(res.data);
     } catch (err) {
       console.error("Ошибка при получении ДЗ");
     } finally {
@@ -70,7 +71,6 @@ const HomeworkItemPage = ({ user, apiUrl, token }) => {
             }
           );
           setMySubmission(res.data);
-          console.log(res.data);
         } catch (err) {
           if (err.response?.status === 404) {
             setMySubmission(null);
@@ -228,7 +228,6 @@ const HomeworkItemPage = ({ user, apiUrl, token }) => {
 
   const handleSubmitToJournal = async (submission) => {
     try {
-      console.log(submission);
       await axios.post(
         `${apiUrl}/api/submission/${submission._id}/grade`,
         {},
@@ -377,9 +376,26 @@ const HomeworkItemPage = ({ user, apiUrl, token }) => {
           {!mySubmission.aiResult && !mySubmission.grade && !isChecking && (
             <>
               {user.premium?.isActive ? (
-                <button onClick={handleCheckAI} className="ai-check-button">
-                  ✨ Проверить с помощью ИИ
-                </button>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "15px",
+                  }}
+                >
+                  <button onClick={handleCheckAI} className="ai-check-button">
+                    ✨ Проверить с помощью ИИ
+                  </button>
+                  <TooltipWrapper
+                    label="Эта функция позволяет получить автоматическую оценку с пояснением от нейросети на основе вашего ответа. 
+                      Если у вас активен премиум, ИИ проанализирует как текст, так и прикреплённые изображения (если есть), выставит оценку от 2 до 5 и кратко пояснит, почему она такая. 
+                      Учитель всегда может изменить эту оценку вручную."
+                    delay={100}
+                  >
+                    <BadgeHelp color="rgba(255, 255, 255, 0.5)" />
+                  </TooltipWrapper>
+                </div>
               ) : (
                 <a
                   href="/premium"

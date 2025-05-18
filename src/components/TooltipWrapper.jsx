@@ -5,8 +5,8 @@
 
 import * as Tooltip from "@radix-ui/react-tooltip";
 
-const TooltipWrapper = ({ children, label }) => (
-  <Tooltip.Provider delayDuration={700}>
+const TooltipWrapper = ({ children, label, delay = 700 }) => (
+  <Tooltip.Provider delayDuration={delay}>
     <Tooltip.Root>
       <Tooltip.Trigger asChild>
         {typeof children === "string" ? <span>{children}</span> : children}

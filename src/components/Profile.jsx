@@ -3,13 +3,20 @@
 // 👤 Author: Dmitriy P.A.
 // 🔒 Proprietary Code – do not copy without permission.
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, use } from "react";
 import axios from "axios";
 import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import Loading from "./Loading";
 //import DefaultAvatar from "./icons/default-avatar.png";
 import { toast } from "react-toastify";
-import { Star, Settings, BadgeCheck, Plus, PencilLine } from "lucide-react";
+import {
+  Star,
+  Settings,
+  BadgeCheck,
+  Plus,
+  PencilLine,
+  BadgeHelp,
+} from "lucide-react";
 import ReportModal from "./ReportModal";
 import CommentSection from "./CommentSection";
 import TiptapEditor from "./TiptapEditor";
@@ -287,8 +294,15 @@ const Profile = ({ user, token, apiUrl }) => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
             transition={{ duration: 0.3 }}
+            style={{ width: "100%" }}
           >
-            <DetailedProfileView profile={profile} groupName={groupName} />
+            <DetailedProfileView
+              profile={profile}
+              groupName={groupName}
+              token={token}
+              apiUrl={apiUrl}
+              user={user}
+            />
           </motion.div>
         ) : (
           <motion.div
@@ -431,39 +445,44 @@ const Profile = ({ user, token, apiUrl }) => {
                   <p>Рейтинг:</p>
                   {profile._id !== "67ab1aa0af53f6eca8443d6e" ? (
                     profile.role === "student" ? (
-                      <div
-                        className="stars"
-                        style={{ transform: "translateY(3px)" }}
+                      <TooltipWrapper
+                        label="Рейтинг — это среднее арифметическое всех оценок, выставленных вам в журнале. Он помогает отразить общую успеваемость ученика и автоматически обновляется при появлении новых оценок"
+                        delay={100}
                       >
-                        {[...Array(5)].map((_, i) => {
-                          const full = i + 1 <= rating;
-                          const half = i + 0.5 === rating;
+                        <div
+                          className="stars"
+                          style={{ transform: "translateY(3px)" }}
+                        >
+                          {[...Array(5)].map((_, i) => {
+                            const full = i + 1 <= rating;
+                            const half = i + 0.5 === rating;
 
-                          return (
-                            <span key={i}>
-                              {full ? (
-                                <Star
-                                  className="text-yellow-400 w-5 h-5"
-                                  color="#faa307"
-                                  fill="#ffba08"
-                                />
-                              ) : half ? (
-                                <Star
-                                  className="text-yellow-400 w-5 h-5 opacity-50"
-                                  color="#faa307"
-                                  fill="#ffba08"
-                                  opacity="50%"
-                                />
-                              ) : (
-                                <Star
-                                  className="text-gray-300 w-5 h-5"
-                                  color="gray"
-                                />
-                              )}
-                            </span>
-                          );
-                        })}
-                      </div>
+                            return (
+                              <span key={i}>
+                                {full ? (
+                                  <Star
+                                    className="text-yellow-400 w-5 h-5"
+                                    color="#faa307"
+                                    fill="#ffba08"
+                                  />
+                                ) : half ? (
+                                  <Star
+                                    className="text-yellow-400 w-5 h-5 opacity-50"
+                                    color="#faa307"
+                                    fill="#ffba08"
+                                    opacity="50%"
+                                  />
+                                ) : (
+                                  <Star
+                                    className="text-gray-300 w-5 h-5"
+                                    color="gray"
+                                  />
+                                )}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </TooltipWrapper>
                     ) : (
                       <div
                         className="stars"

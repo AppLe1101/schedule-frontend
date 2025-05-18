@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 import "./styles/PremiumPage.css";
+import PremiumMedalViewer from "./PremiumMedalViewer";
 
 const PremiumPage = ({ user, token, apiUrl }) => {
   const navigate = useNavigate();
@@ -118,6 +119,9 @@ const PremiumPage = ({ user, token, apiUrl }) => {
         exit={{ opacity: 0, scale: 1.05 }}
         transition={{ duration: 0.6 }}
       >
+        {/*<div className="premium-medal-container">
+          <PremiumMedalViewer />
+        </div>*/}
         {loading ? (
           <Loading />
         ) : (
@@ -165,7 +169,9 @@ const PremiumPage = ({ user, token, apiUrl }) => {
               ) : expired ? (
                 <div className="self-subscription-info">
                   <p className="expired-label">⏰ Подписка истекла</p>
-                  <button onClick={handlePremiumBuy}>Продлить</button>
+                  <button onClick={handlePremiumBuy}>
+                    Продлить за 99 ₽/мес
+                  </button>
                 </div>
               ) : (
                 <div className="buy-container">
@@ -200,6 +206,7 @@ const PremiumPage = ({ user, token, apiUrl }) => {
                   <li>📈 Графики успеваемости</li>
                   <li>📊 Расширенная статистика</li>
                   <li>🎨 Улучшенное оформление</li>
+                  <li>🤖 Проверка ДЗ нейросетью</li>
                 </ul>
               </div>
 

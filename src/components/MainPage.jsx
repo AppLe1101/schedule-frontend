@@ -13,6 +13,28 @@ import NewsRenderer from "./NewsRenderer";
 import "./styles/MainPage.css";
 import { motion } from "framer-motion";
 
+const premiumTexts = [
+  {
+    title: "Открой новые возможности с LearningPortal Premium",
+    description:
+      "Получи доступ к автопроверке ДЗ с помощью ИИ, подробным графикам успеваемости, уникальному оформлению профиля и другим премиум-функциям.",
+  },
+  {
+    title: "Прокачай свой учебный опыт!",
+    description:
+      "Premium-аккаунт откроет для тебя новые горизонты: умная проверка заданий, аналитика по предметам, эксклюзивные темы и бонусы профиля.",
+  },
+  {
+    title: "Premium — всё лучшее в одном аккаунте.",
+    description: "Успеваемость. ИИ. Стиль. Контроль.",
+  },
+  {
+    title: "Сделай учёбу удобнее и интереснее.",
+    description:
+      "С премиум-доступом ты получаешь больше: умные функции, индивидуальные графики, красивые профили и удобство на каждом шагу.",
+  },
+];
+
 const MainPage = ({ user, token, apiUrl }) => {
   const [searchParams] = useSearchParams();
   const highlightId = searchParams.get("highlight");
@@ -28,6 +50,9 @@ const MainPage = ({ user, token, apiUrl }) => {
     title: "",
     content: "",
     image: "",
+  });
+  const [text] = useState(() => {
+    return premiumTexts[Math.floor(Math.random() * premiumTexts.length)];
   });
 
   const isAuthorized =
@@ -188,6 +213,26 @@ const MainPage = ({ user, token, apiUrl }) => {
       {loading && <Loading className="profile-loading" />}
       {news.length > 0 ? (
         <div className="news-list">
+          {!user.premium?.isActive && (
+            <div className="premium-ad">
+              <div className="news-item-ad">
+                <div className="ad-image">
+                  <img
+                    src="img/onboarding/premium-main_full.png"
+                    alt="premium-ad-image"
+                  />
+                </div>
+                <div className="ad-text">
+                  <h2>{text.title}</h2>
+                  <p>{text.description}</p>
+                  <a href="/premium">
+                    <button>Оформить премиум</button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+
           {news.map((item, index) => {
             const isNew = newNews.some((n) => n._id === item._id);
             const showDivider =

@@ -68,6 +68,7 @@
 
 .confirm-button:hover {
   background: #0056b3;
+  color: white;
 }
 
 .twofa-content h3 {

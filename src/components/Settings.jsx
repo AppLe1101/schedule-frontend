@@ -11,6 +11,7 @@ import Loading from "./Loading";
 import TwoFAVerifyModal from "./TwoFAVerifyModal";
 import PasswordConfirmModal from "./PasswordConfirmModal";
 import DelReqModal from "./DelReqModal";
+import TrustAIModal from "./TrustAIModal";
 import "./styles/Settings.css";
 import { motion } from "framer-motion";
 
@@ -38,6 +39,7 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState([]);
+  const [showTrustModal, setShowTrustModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -183,21 +185,6 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
     }
   };
 
-  // Временно добавим фейковый способ оплаты для скрина
-  const mockedCard = {
-    id: "test_1234",
-    card: {
-      type: "Visa",
-      last4: "1234",
-      expiry_month: "12",
-      expiry_year: "2030",
-    },
-    brandIcon:
-      "https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png", // или локальную иконку
-  };
-  const methodsToRender =
-    paymentMethods.length === 0 ? [mockedCard] : paymentMethods;
-
   const getCardIcon = (type) => {
     switch (type?.toLowerCase()) {
       case "visa":
@@ -209,6 +196,23 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
         return "/img/mir.svg";
       default:
         return "/img/credit-card.svg";
+    }
+  };
+
+  const updateTrustAISetting = async (value) => {
+    setEnableTrustAI(value);
+    try {
+      await axios.put(
+        `${apiUrl}/api/users/${user._id}/update-trustAI-setting`,
+        {
+          trustAI: value,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    } catch (err) {
+      console.error("Ошибка при обновлении настроек доверия ИИ:", err);
     }
   };
 
@@ -431,7 +435,7 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
         </label>
       </div>
 
-      <div className="comments-toggle-setting">
+      <div className="animations-toggle-setting">
         <label className="switch">
           <input
             type="checkbox"
@@ -459,29 +463,17 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
         </label>
       </div>
 
-      <div className="comments-toggle-setting">
+      <div className="ai-toggle-setting">
         <label className="switch">
           <input
             type="checkbox"
             checked={enableTrustAI}
             onChange={async (e) => {
               const newVal = e.target.checked;
-              setEnableTrustAI(newVal);
-              try {
-                await axios.put(
-                  `${apiUrl}/api/users/${user._id}/update-trustAI-setting`,
-                  {
-                    trustAI: newVal,
-                  },
-                  {
-                    headers: { Authorization: `Bearer ${token}` },
-                  }
-                );
-              } catch (err) {
-                console.error(
-                  "Ошибка при обновлении настроек доверия ИИ:",
-                  err
-                );
+              if (newVal) {
+                setShowTrustModal(true);
+              } else {
+                updateTrustAISetting(false);
               }
             }}
           />
@@ -560,6 +552,20 @@ const Settings = ({ token, apiUrl, user, theme, setTheme }) => {
           onSuccess={() => {
             disable2FA();
             setShowDisableModal(false);
+          }}
+        />
+      )}
+
+      {/* МОДАЛКА ПОДТВЕРЖДЕНИЯ ДОВЕРИЯ ИИ */}
+      {showTrustModal && (
+        <TrustAIModal
+          onConfirm={() => {
+            updateTrustAISetting(true);
+            setShowTrustModal(false);
+          }}
+          onCancel={() => {
+            setEnableTrustAI(false);
+            setShowTrustModal(false);
           }}
         />
       )}

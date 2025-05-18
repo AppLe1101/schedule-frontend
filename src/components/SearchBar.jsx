@@ -3,17 +3,90 @@
 // 👤 Author: Dmitriy P.A.
 // 🔒 Proprietary Code – do not copy without permission.
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Search } from "lucide-react";
 import "./styles/SearchBar.css";
+
+const placeholderVariants = [
+  "Поиск...",
+  "Иван Иванов",
+  "32-П",
+  "Математика 16.05.25",
+  "log(5)25",
+  "Новости колледжа",
+  "user123",
+];
 
 const SearchBar = ({ token, apiUrl, user }) => {
   const [searchType, setSearchType] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+
+  const [placeholder, setPlaceholder] = useState("");
+  const [variantIndex, setVariantIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [pause, setPause] = useState(false);
+
+  useEffect(() => {
+    if (searchQuery) return;
+
+    const currentText = placeholderVariants[variantIndex];
+
+    if (searchType !== "all") {
+      switch (searchType) {
+        case "users":
+          setPlaceholder("Иванов Иван");
+          break;
+        case "news":
+          setPlaceholder("Новости колледжа");
+          break;
+        case "groups":
+          setPlaceholder("12-П");
+          break;
+        case "homework":
+          setPlaceholder("Математика 16.05.25");
+          break;
+        default:
+          setPlaceholder("Поиск...");
+          break;
+      }
+      return;
+    }
+
+    if (pause) {
+      const pauseTimeout = setTimeout(() => setPause(false), 1000);
+      return () => clearTimeout(pauseTimeout);
+    }
+
+    const timeout = setTimeout(
+      () => {
+        if (!isDeleting) {
+          setPlaceholder(currentText.slice(0, charIndex + 1));
+          setCharIndex((prev) => prev + 1);
+
+          if (charIndex + 1 === currentText.length) {
+            setPause(true);
+            setIsDeleting(true);
+          }
+        } else {
+          setPlaceholder(currentText.slice(0, charIndex - 1));
+          setCharIndex((prev) => prev - 1);
+
+          if (charIndex - 1 === 0) {
+            setIsDeleting(false);
+            setVariantIndex((prev) => (prev + 1) % placeholderVariants.length);
+          }
+        }
+      },
+      isDeleting ? 50 : 100
+    );
+
+    return () => clearTimeout(timeout);
+  }, [charIndex, isDeleting, variantIndex, pause, searchQuery, searchType]);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -96,7 +169,7 @@ const SearchBar = ({ token, apiUrl, user }) => {
 
       <input
         type="text"
-        placeholder="Поиск..."
+        placeholder={placeholder}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         className="search-input"
@@ -142,12 +215,12 @@ const SearchBar = ({ token, apiUrl, user }) => {
                   <Link
                     to={
                       user.role === "student"
-                        ? `/homework?highlight=${result._id}`
-                        : `/homework?highlight=${result._id}`
+                        ? `/homework/${result._id}`
+                        : `/homework/${result._id}`
                     }
                   >
                     <p>
-                      📘 {result.subject} —{" "}
+                      📘 {result.subject?.name} —{" "}
                       {new Date(result.date).toLocaleDateString()}
                     </p>
                   </Link>

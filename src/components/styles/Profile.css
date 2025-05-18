@@ -256,6 +256,13 @@
   color: rgb(0, 0, 0);
 }
 
+.detailed-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
 .profile-details-tab {
   border: 1px solid rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.1);
@@ -263,9 +270,7 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   padding: 20px;
   border-radius: 30px;
-  margin-top: 20px;
   max-width: 600px;
-  margin-inline: auto;
   width: 350px;
 }
 
@@ -393,5 +398,13 @@ a {
   .comment-section {
     margin-top: 16px;
     width: 90%;
+  }
+
+  .detailed-tab {
+    flex-direction: column;
+  }
+
+  .charts {
+    margin-top: 20px;
   }
 }

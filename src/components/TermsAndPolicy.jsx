@@ -5,12 +5,19 @@
 
 import React, { useState } from "react";
 import "./styles/TermsAndPolicy.css";
+import { motion } from "framer-motion";
 
 const TermsAndPolicy = () => {
   const [activeTab, setActiveTab] = useState("rules");
 
   return (
-    <div className="terms-container">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3 }}
+      className="terms-container"
+    >
       <div className="terms-tabs">
         <button
           onClick={() => setActiveTab("rules")}
@@ -96,7 +103,7 @@ const TermsAndPolicy = () => {
           <p>Телефон: +7 (915) 257-12-65</p>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

@@ -26,9 +26,13 @@ import TermsAndPolicy from "./components/TermsAndPolicy";
 import PremiumPage from "./components/PremiumPage";
 import ThankYouPage from "./components/ThankYouPage";
 import PaymentHistoryPage from "./components/PaymentHistoryPage";
+import FAQModal from "./components/FAQModal";
 import Footer from "./components/Footer";
 import NotFoundPage from "./components/NotFondPage";
+import FAQPage from "./components/FAQPage";
+import SupportForm from "./components/SupportForm";
 import { ToastContainer } from "react-toastify";
+import { MessageCircleMore } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 import "./components/utils/axiosSetup";
 import "./App.css";
@@ -43,6 +47,8 @@ function App() {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const location = useLocation();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showSupport, setShowSupport] = useState(false);
 
   function decodeBase64Url(base64url) {
     let base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
@@ -102,6 +108,12 @@ function App() {
     }
   }, [location.pathname, token, user]);
 
+  useEffect(() => {
+    if (user && user.onboardingSeen === false) {
+      setShowOnboarding(true);
+    }
+  }, [user]);
+
   const handleLogin = (token, userData) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
@@ -117,6 +129,11 @@ function App() {
     sessionStorage.clear();
   };
 
+  const handleCloseOnboarding = () => {
+    setShowOnboarding(false);
+    setUser((prev) => ({ ...prev, onboardingSeen: true }));
+  };
+
   return (
     <>
       {token && (
@@ -125,6 +142,14 @@ function App() {
           token={token}
           user={user}
           apiUrl={apiUrl}
+        />
+      )}
+
+      {showOnboarding && (
+        <FAQModal
+          onClose={handleCloseOnboarding}
+          apiUrl={apiUrl}
+          token={token}
         />
       )}
 
@@ -282,13 +307,20 @@ function App() {
                 element={<PaymentHistoryPage apiUrl={apiUrl} token={token} />}
               />
               <Route path="/policy" element={<TermsAndPolicy />} />
+              <Route path="/faq" element={<FAQPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </AnimatePresence>
+          <button
+            onClick={() => setShowSupport(true)}
+            className="support-button-open"
+          >
+            <MessageCircleMore color="#333" width="20px" height="20px" />
+          </button>
+          <footer style={{ position: "fixed", bottom: "0", width: "100%" }}>
+            <Footer />
+          </footer>
         </main>
-        <footer style={{ position: "fixed", bottom: "0", width: "100%" }}>
-          <Footer />
-        </footer>
       </div>
       <ToastContainer
         rtl={false}
@@ -297,6 +329,19 @@ function App() {
         hideProgressBar={true}
         autoClose={2000}
       />
+      {showSupport && (
+        <div className="modal-overlay" onClick={() => setShowSupport(false)}>
+          <div className="modal-window" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="close-button"
+              onClick={() => setShowSupport(false)}
+            >
+              ✕
+            </button>
+            <SupportForm user={user} apiUrl={apiUrl} token={token} />
+          </div>
+        </div>
+      )}
     </>
   );
 }

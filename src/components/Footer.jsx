@@ -15,6 +15,7 @@ const Footer = () => {
       </div>
       <div className="footer-right">
         <Link to={"/policy"}>Политика</Link>
+        <Link to={"/faq"}>Помощь</Link>
         <Link
           to={"https://antiplagiat.ru"}
           target="_blank"
